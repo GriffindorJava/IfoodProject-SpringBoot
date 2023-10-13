@@ -10,3 +10,6 @@ insert into tb_cidade (nome) values ('ilha bela')
 
 insert into tb_estado (nome) values ('São paulo')
 insert into tb_estado(nome) values ('Rio de janeiro')
+
+insert into tb_formaPagamento (descricao) values ('cartão');
+insert into tb_formaPagamento (descricao) values ('boleto');
