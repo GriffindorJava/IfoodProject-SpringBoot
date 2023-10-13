@@ -18,13 +18,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter @Setter
 @Entity
-@Table(name = "tb_forma_Pagamento")
-public class FormaPagamento implements Serializable{
+@Table(name = "tb_permissao")
+public class Permissao implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	private String nome;
 	private String descricao;
 }
