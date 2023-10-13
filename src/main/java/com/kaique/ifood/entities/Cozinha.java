@@ -1,13 +1,11 @@
 package com.kaique.ifood.entities;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,11 +14,10 @@ import lombok.Setter;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "tb_restaurante")
-public class Restaurante implements Serializable{
+public class Cozinha implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -28,5 +25,4 @@ public class Restaurante implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
-	private BigDecimal taxaFrete;
 }
