@@ -1,10 +1,10 @@
-package com.kaique.ifoodPT1;
+package com.kaique.ifood;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class IfoodPt1ApplicationTests {
+class IfoodApplicationTests {
 
 	@Test
 	void contextLoads() {
