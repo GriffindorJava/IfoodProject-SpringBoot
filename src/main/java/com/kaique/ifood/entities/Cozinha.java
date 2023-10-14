@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,5 +35,6 @@ public class Cozinha implements Serializable {
 	private String nome;
 	
 	@OneToMany(mappedBy = "cozinha")
+	@JsonIgnore
 	private List<Restaurante> restaurantes = new ArrayList<>();
 }
