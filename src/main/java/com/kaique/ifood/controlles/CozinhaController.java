@@ -18,9 +18,19 @@ public class CozinhaController {
 
 	@Autowired
 	private CozinhaService service;
-	
+
 	@GetMapping
 	public ResponseEntity<List<Cozinha>> listar() {
 		return ResponseEntity.status(HttpStatus.OK).body(service.listar());
 	}
+
+	/*
+	 * esse método foi criado com o intuído de praticar o exercício do curso , mais não
+	 * a a necessidade de usar o "produces" a não ser que você queira que a api
+	 * retorne um formato especifico no endpoint
+	 * 
+	 * @GetMapping(produces = MediaType.APPLICATION_PROBLEM_JSON_VALUE)
+	 * public ResponseEntity<List<Cozinha>> listar() { return
+	 * ResponseEntity.status(HttpStatus.OK).body(service.listar()); }
+	 */
 }

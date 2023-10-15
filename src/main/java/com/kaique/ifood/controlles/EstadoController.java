@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,9 +19,21 @@ public class EstadoController {
 
 	@Autowired
 	private EstadoService service;
-	
+
 	@GetMapping
 	public ResponseEntity<List<Estado>> listar() {
 		return ResponseEntity.status(HttpStatus.OK).body(service.listar());
+	}
+
+	/*
+	 * implementação temporária
+	 */
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Estado> buscaPorId(@PathVariable Long id) {
+		if (service.buscaPorId(id).isPresent())
+			return ResponseEntity.ok(service.buscaPorId(id).get());
+
+		return ResponseEntity.notFound().build();
 	}
 }
