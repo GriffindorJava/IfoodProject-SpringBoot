@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.kaique.ifood.entities.Estado;
 import com.kaique.ifood.repositories.EstadoRepository;
 
+import jakarta.validation.ConstraintViolationException;
+
 @Service
 public class EstadoService {
 
@@ -21,5 +23,9 @@ public class EstadoService {
 	
 	public Optional<Estado> buscaPorId(Long id) {
 		return repository.findById(id);
+	}
+
+	public Estado adiciona(Estado estado) throws ConstraintViolationException{
+		return	repository.save(estado);
 	}
 }
