@@ -24,7 +24,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name= "tb_cozinha")
+@Table(name = "tb_cozinha")
 public class Cozinha implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -33,7 +33,7 @@ public class Cozinha implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
-	
+
 	@OneToMany(mappedBy = "cozinha")
 	@JsonIgnore
 	private List<Restaurante> restaurantes = new ArrayList<>();

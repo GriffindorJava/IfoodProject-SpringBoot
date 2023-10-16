@@ -8,38 +8,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.kaique.ifood.entities.Estado;
+import com.kaique.ifood.entities.Restaurante;
 import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
-import com.kaique.ifood.repositories.EstadoRepository;
+import com.kaique.ifood.repositories.RestauranteRepository;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 
 @Service
-public class EstadoService {
+public class RestauranteService {
 
 	@Autowired
-	private EstadoRepository repository;
+	private RestauranteRepository repository;
 
-	public List<Estado> listar() {
+	public List<Restaurante> listar() {
 		return repository.findAll();
 	}
 
-	public Optional<Estado> buscaPorId(Long id) {
+	public Optional<Restaurante> buscaPorId(Long id) {
 		return repository.findById(id);
 	}
 
 	@Transactional
-	public Estado adiciona(Estado estado) throws ConstraintViolationException {
-		return repository.save(estado);
+	public Restaurante adiciona(Restaurante restaurante) throws ConstraintViolationException {
+		return repository.save(restaurante);
 	}
 
 	@Transactional
-	public Estado atualiza(Long id, Estado NovoEstado) throws ConstraintViolationException {
-		Estado estadoAtual = repository.findById(id).get();
-		BeanUtils.copyProperties(NovoEstado, estadoAtual, "id");
-		return repository.save(estadoAtual);
+	public Restaurante atualiza(Long id, Restaurante NovoRestaurante) throws ConstraintViolationException {
+		Restaurante restauranteAtual = repository.findById(id).get();
+		BeanUtils.copyProperties(NovoRestaurante, restauranteAtual, "id");
+		return repository.save(restauranteAtual);
 	}
 
 	@Transactional
@@ -51,7 +51,7 @@ public class EstadoService {
 
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntidadeEmUsoException(
-					String.format("Estado de código %d não pode ser removido , pois está em uso ", id));
+					String.format("Restaurante de código %d não pode ser removido , pois está em uso ", id));
 		}
 
 	}

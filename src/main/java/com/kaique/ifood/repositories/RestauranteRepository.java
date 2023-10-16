@@ -2,8 +2,8 @@ package com.kaique.ifood.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.kaique.ifood.entities.FormaPagamento;
+import com.kaique.ifood.entities.Restaurante;
 
-public interface RestauranteRepository extends JpaRepository<FormaPagamento, Long>{
+public interface RestauranteRepository extends JpaRepository<Restaurante, Long>{
 
 }
