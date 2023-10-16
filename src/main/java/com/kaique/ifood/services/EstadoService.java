@@ -5,9 +5,13 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.kaique.ifood.entities.Estado;
+import com.kaique.ifood.exception.EntidadeEmUsoException;
+import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.repositories.EstadoRepository;
 
 import jakarta.transaction.Transactional;
@@ -37,5 +41,17 @@ public class EstadoService {
 		Estado estadoAtual = repository.findById(id).get();
 		BeanUtils.copyProperties(NovoEstado, estadoAtual, "id");
 		return repository.save(estadoAtual);
+	}
+
+	public void deletar(Long id) {
+		try {
+			repository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
+		} catch (EmptyResultDataAccessException e) {
+			throw new EntidadeEmUsoException(
+					String.format("Estado de código %d não pode ser removido , pois está em uso ", id));
+		}
+
 	}
 }
