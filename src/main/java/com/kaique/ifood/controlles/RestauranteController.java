@@ -41,12 +41,16 @@ public class RestauranteController {
 		return ResponseEntity.notFound().build();
 	}
 
+	/*
+	 * implementação temporaria
+	 */
+
 	@PostMapping
-	public ResponseEntity<Restaurante> adiciona(@RequestBody Restaurante restaurante) {
+	public ResponseEntity<?> adiciona(@RequestBody Restaurante restaurante) {
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED).body(service.adiciona(restaurante));
-		} catch (ConstraintViolationException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} catch (ConstraintViolationException | EntidadeNaoEncontradaException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
 	}
 

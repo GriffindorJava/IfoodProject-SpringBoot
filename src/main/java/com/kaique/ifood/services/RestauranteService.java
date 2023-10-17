@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.kaique.ifood.entities.Restaurante;
 import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
+import com.kaique.ifood.repositories.CozinhaRepository;
 import com.kaique.ifood.repositories.RestauranteRepository;
 
 import jakarta.transaction.Transactional;
@@ -22,6 +23,9 @@ public class RestauranteService {
 	@Autowired
 	private RestauranteRepository repository;
 
+	@Autowired
+	private CozinhaRepository cozinhaRepository;
+
 	public List<Restaurante> listar() {
 		return repository.findAll();
 	}
@@ -32,6 +36,12 @@ public class RestauranteService {
 
 	@Transactional
 	public Restaurante adiciona(Restaurante restaurante) throws ConstraintViolationException {
+
+		if (cozinhaRepository.findById(restaurante.getCozinha().getId()).isEmpty()) {
+			throw new EntidadeNaoEncontradaException(
+					String.format("Código %d de cozinha não foi encontrado ", restaurante.getCozinha().getId()));
+		}
+
 		return repository.save(restaurante);
 	}
 
