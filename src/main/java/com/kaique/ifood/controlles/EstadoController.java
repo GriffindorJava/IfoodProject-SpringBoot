@@ -55,7 +55,7 @@ public class EstadoController {
 	}
 
 	@PutMapping("/{EstadiId}")
-	public ResponseEntity<Estado> adiciona(@PathVariable Long EstadiId, @RequestBody Estado estado) {
+	public ResponseEntity<Estado> atualiza(@PathVariable Long EstadiId, @RequestBody Estado estado) {
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(EstadiId, estado));
 		} catch (ConstraintViolationException e) {

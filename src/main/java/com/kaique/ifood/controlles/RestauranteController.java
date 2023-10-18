@@ -55,7 +55,7 @@ public class RestauranteController {
 	}
 
 	@PutMapping("/{EstadiId}")
-	public ResponseEntity<Restaurante> adiciona(@PathVariable Long EstadiId, @RequestBody Restaurante restaurante) {
+	public ResponseEntity<Restaurante> atualiza(@PathVariable Long EstadiId, @RequestBody Restaurante restaurante) {
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(EstadiId, restaurante));
 		} catch (ConstraintViolationException e) {
