@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.kaique</groupId>
-	<artifactId>ifoodPT1</artifactId>
+	<artifactId>ifood</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ifoodPT1</name>
+	<name>ifood</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>

@@ -34,7 +34,7 @@ public class Cozinha implements Serializable {
 	private Long id;
 	private String nome;
 
-	@OneToMany(mappedBy = "cozinha")
+	@OneToMany()
 	@JsonIgnore
 	private List<Restaurante> restaurantes = new ArrayList<>();
 }
