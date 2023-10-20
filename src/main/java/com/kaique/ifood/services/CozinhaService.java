@@ -26,6 +26,10 @@ public class CozinhaService {
 	public Optional<Cozinha> buscaPorId(Long id) {
 		return repository.findById(id);
 	}
+	
+	public List<Cozinha> buscarPorNome(String nome) {
+		return repository.findByNomeContainsIgnoreCase(nome);
+	}
 
 	@Transactional
 	public Cozinha adiciona(Cozinha Cozinha) {
@@ -50,6 +54,5 @@ public class CozinhaService {
 			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado", id));
 
 		repository.deleteById(id);
-
 	}
 }

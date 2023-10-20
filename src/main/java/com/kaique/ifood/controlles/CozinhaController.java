@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kaique.ifood.entities.Cozinha;
@@ -50,12 +51,15 @@ public class CozinhaController {
 
 		return ResponseEntity.notFound().build();
 	}
+	
+	@GetMapping("/buscarPorNome/{nome}")
+	public ResponseEntity<List<Cozinha>> buscarPorNome(@RequestParam String nome) {
+		return ResponseEntity.status(HttpStatus.OK).body(service.buscarPorNome(nome));
+	}
 
 	@PostMapping
 	public ResponseEntity<Cozinha> adiciona(@RequestBody Cozinha cozinha) {
-
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.adiciona(cozinha));
-
 	}
 
 	@PutMapping("/{cozinhaId}")
