@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kaique.ifood.entities.Cozinha;
-import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.services.CozinhaService;
 
@@ -54,34 +53,29 @@ public class CozinhaController {
 
 	@PostMapping
 	public ResponseEntity<Cozinha> adiciona(@RequestBody Cozinha cozinha) {
-		try {
+	
 			return ResponseEntity.status(HttpStatus.CREATED).body(service.adiciona(cozinha));
-		} catch (ConstraintViolationException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
+		
 	}
 
 	@PutMapping("/{EstadiId}")
 	public ResponseEntity<Cozinha> atualiza(@PathVariable Long EstadiId, @RequestBody Cozinha cozinha) {
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(EstadiId, cozinha));
-		} catch (ConstraintViolationException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		} catch (Exception e) {
-
+		} catch (ConstraintViolationException | EntidadeNaoEncontradaException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deletar(@PathVariable Long id) {
-	    try {
-	    	service.deletar(id);
-	        return ResponseEntity.noContent().build();
-	    } catch (EntidadeEmUsoException e) {
-	        return ResponseEntity.status(HttpStatus.CONFLICT).build();
-	    } catch (EntidadeNaoEncontradaException e) {
-	        return ResponseEntity.notFound().build();
-	    }
+		try {
+			service.deletar(id);
+			return ResponseEntity.noContent().build();
+		} catch (DataIntegrityViolationException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.notFound().build();
+		}
 	}
 }

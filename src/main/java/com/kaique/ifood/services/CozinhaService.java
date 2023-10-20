@@ -31,12 +31,16 @@ public class CozinhaService {
 	}
 
 	@Transactional
-	public Cozinha adiciona(Cozinha estado) throws ConstraintViolationException {
+	public Cozinha adiciona(Cozinha estado) {
 		return repository.save(estado);
 	}
 
 	@Transactional
-	public Cozinha atualiza(Long id, Cozinha NovoCozinha) throws ConstraintViolationException {
+	public Cozinha atualiza(Long id, Cozinha NovoCozinha) {
+
+		if (repository.findById(id).isEmpty())
+			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
+
 		Cozinha estadoAtual = repository.findById(id).get();
 		BeanUtils.copyProperties(NovoCozinha, estadoAtual, "id");
 		return repository.save(estadoAtual);
@@ -46,13 +50,10 @@ public class CozinhaService {
     @Transactional
     public void deletar(Long id) {
     	
-        try {
             if (repository.findById(id).isEmpty()) 
                 throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado", id));
+           
             repository.deleteById(id);
           
-        } catch (DataIntegrityViolationException e) {
-            throw new EntidadeEmUsoException(String.format("Cozinha de código %d não pode ser removida, pois está em uso", id));
-        }
     }
 }

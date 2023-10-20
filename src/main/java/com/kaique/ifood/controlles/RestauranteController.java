@@ -3,6 +3,7 @@ package com.kaique.ifood.controlles;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kaique.ifood.entities.Restaurante;
-import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.services.RestauranteService;
 
@@ -49,7 +49,7 @@ public class RestauranteController {
 	public ResponseEntity<?> adiciona(@RequestBody Restaurante restaurante) {
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED).body(service.adiciona(restaurante));
-		} catch (ConstraintViolationException | EntidadeNaoEncontradaException e) {
+		} catch (ConstraintViolationException | EntidadeNaoEncontradaException | NullPointerException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
 	}
@@ -58,11 +58,11 @@ public class RestauranteController {
 	public ResponseEntity<Restaurante> atualiza(@PathVariable Long EstadiId, @RequestBody Restaurante restaurante) {
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(EstadiId, restaurante));
-		} catch (ConstraintViolationException e) {
+		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
+		}  catch (DataIntegrityViolationException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		} 
 	}
 
 	@DeleteMapping("/{id}")
@@ -71,9 +71,6 @@ public class RestauranteController {
 		try {
 			service.deletar(id);
 			return ResponseEntity.noContent().build();
-
-		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();

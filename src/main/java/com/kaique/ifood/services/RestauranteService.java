@@ -5,17 +5,14 @@ import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.kaique.ifood.entities.Restaurante;
-import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.repositories.CozinhaRepository;
 import com.kaique.ifood.repositories.RestauranteRepository;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class RestauranteService {
@@ -35,18 +32,21 @@ public class RestauranteService {
 	}
 
 	@Transactional
-	public Restaurante adiciona(Restaurante restaurante) throws ConstraintViolationException {
-
-		if (cozinhaRepository.findById(restaurante.getCozinha().getId()).isEmpty()) {
-			throw new EntidadeNaoEncontradaException(
-					String.format("Código %d de cozinha não foi encontrado ", restaurante.getCozinha().getId()));
-		}
+	public Restaurante adiciona(Restaurante restaurante) {
+		if (restaurante.getCozinha().getId() != null)
+			if (cozinhaRepository.findById(restaurante.getCozinha().getId()).isEmpty()) {
+				throw new EntidadeNaoEncontradaException(
+						String.format("Código %d de cozinha não foi encontrado ", restaurante.getCozinha().getId()));
+			}
 
 		return repository.save(restaurante);
 	}
 
 	@Transactional
-	public Restaurante atualiza(Long id, Restaurante NovoRestaurante) throws ConstraintViolationException {
+	public Restaurante atualiza(Long id, Restaurante NovoRestaurante) {
+		if (repository.findById(id).isEmpty())
+			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
+
 		Restaurante restauranteAtual = repository.findById(id).get();
 		BeanUtils.copyProperties(NovoRestaurante, restauranteAtual, "id");
 		return repository.save(restauranteAtual);
@@ -54,15 +54,9 @@ public class RestauranteService {
 
 	@Transactional
 	public void deletar(Long id) {
-		try {
-			if (repository.findById(id).isEmpty())
-				throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
-			repository.deleteById(id);
 
-		} catch (EmptyResultDataAccessException e) {
-			throw new EntidadeEmUsoException(
-					String.format("Restaurante de código %d não pode ser removido , pois está em uso ", id));
-		}
-
+		if (repository.findById(id).isEmpty())
+			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
+		repository.deleteById(id);
 	}
 }

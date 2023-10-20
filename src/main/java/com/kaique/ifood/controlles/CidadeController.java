@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kaique.ifood.entities.Cidade;
-import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.services.CidadeService;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 
 @RestController
@@ -49,7 +49,7 @@ public class CidadeController {
 	public ResponseEntity<?> adiciona(@RequestBody Cidade cidade) {
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED).body(service.adiciona(cidade));
-		} catch (ConstraintViolationException | EntidadeNaoEncontradaException e) {
+		} catch (ConstraintViolationException | EntidadeNaoEncontradaException | EntityNotFoundException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
 	}
@@ -59,8 +59,8 @@ public class CidadeController {
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(EstadiId, cidade));
 		} catch (ConstraintViolationException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}
@@ -71,10 +71,7 @@ public class CidadeController {
 		try {
 			service.deletar(id);
 			return ResponseEntity.noContent().build();
-
-		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-
+			
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
