@@ -41,9 +41,6 @@ public class CidadeController {
 		return ResponseEntity.notFound().build();
 	}
 
-	/*
-	 * implementação temporaria
-	 */
 
 	@PostMapping
 	public ResponseEntity<?> adiciona(@RequestBody Cidade cidade) {
@@ -54,10 +51,10 @@ public class CidadeController {
 		}
 	}
 
-	@PutMapping("/{EstadiId}")
-	public ResponseEntity<Cidade> atualiza(@PathVariable Long EstadiId, @RequestBody Cidade cidade) {
+	@PutMapping("/{cidadeId}")
+	public ResponseEntity<Cidade> atualiza(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
 		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(EstadiId, cidade));
+			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(cidadeId, cidade));
 		} catch (ConstraintViolationException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		} catch (EntidadeNaoEncontradaException e) {
@@ -71,7 +68,7 @@ public class CidadeController {
 		try {
 			service.deletar(id);
 			return ResponseEntity.noContent().build();
-			
+
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}

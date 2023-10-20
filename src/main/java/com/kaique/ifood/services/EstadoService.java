@@ -33,7 +33,7 @@ public class EstadoService {
 	}
 
 	@Transactional
-	public Estado atualiza(Long id, Estado NovoEstado){
+	public Estado atualiza(Long id, Estado NovoEstado) {
 		if (repository.findById(id).isEmpty())
 			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
 
@@ -44,8 +44,8 @@ public class EstadoService {
 
 	@Transactional
 	public void deletar(Long id) {
-			if (repository.findById(id).isEmpty())
-				throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
-			repository.deleteById(id);
+		if (repository.findById(id).isEmpty())
+			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
+		repository.deleteById(id);
 	}
 }

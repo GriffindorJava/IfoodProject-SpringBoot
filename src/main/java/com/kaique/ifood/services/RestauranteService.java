@@ -33,7 +33,7 @@ public class RestauranteService {
 
 	@Transactional
 	public Restaurante adiciona(Restaurante restaurante) {
-		if (restaurante.getCozinha().getId() != null)
+		if (restaurante.getCozinha().getId() != null)//temporario
 			if (cozinhaRepository.findById(restaurante.getCozinha().getId()).isEmpty()) {
 				throw new EntidadeNaoEncontradaException(
 						String.format("Código %d de cozinha não foi encontrado ", restaurante.getCozinha().getId()));

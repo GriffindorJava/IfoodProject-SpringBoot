@@ -34,10 +34,6 @@ public class EstadoController {
 		return ResponseEntity.status(HttpStatus.OK).body(service.listar());
 	}
 
-	/*
-	 * implementação temporária
-	 */
-
 	@GetMapping("/{id}")
 	public ResponseEntity<Estado> buscaPorId(@PathVariable Long id) {
 		if (service.buscaPorId(id).isPresent())
@@ -56,14 +52,14 @@ public class EstadoController {
 
 	}
 
-	@PutMapping("/{EstadiId}")
-	public ResponseEntity<Estado> atualiza(@PathVariable Long EstadiId, @RequestBody Estado estado) {
+	@PutMapping("/{estadiId}")
+	public ResponseEntity<Estado> atualiza(@PathVariable Long estadiId, @RequestBody Estado estado) {
 		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(EstadiId, estado));
+			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(estadiId, estado));
 
 		} catch (ConstraintViolationException | TransactionSystemException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}catch (EntidadeNaoEncontradaException e) {
+		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 

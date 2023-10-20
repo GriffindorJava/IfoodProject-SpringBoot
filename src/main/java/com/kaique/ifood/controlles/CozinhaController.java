@@ -53,15 +53,15 @@ public class CozinhaController {
 
 	@PostMapping
 	public ResponseEntity<Cozinha> adiciona(@RequestBody Cozinha cozinha) {
-	
-			return ResponseEntity.status(HttpStatus.CREATED).body(service.adiciona(cozinha));
-		
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(service.adiciona(cozinha));
+
 	}
 
-	@PutMapping("/{EstadiId}")
-	public ResponseEntity<Cozinha> atualiza(@PathVariable Long EstadiId, @RequestBody Cozinha cozinha) {
+	@PutMapping("/{cozinhaId}")
+	public ResponseEntity<Cozinha> atualiza(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
 		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(EstadiId, cozinha));
+			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(cozinhaId, cozinha));
 		} catch (ConstraintViolationException | EntidadeNaoEncontradaException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
