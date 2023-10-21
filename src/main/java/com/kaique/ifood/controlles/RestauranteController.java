@@ -1,5 +1,6 @@
 package com.kaique.ifood.controlles;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kaique.ifood.entities.Restaurante;
@@ -41,6 +43,12 @@ public class RestauranteController {
 		return ResponseEntity.notFound().build();
 	}
 
+	@GetMapping("/filtroTaxa/por-taxa-frete")
+	public ResponseEntity<List<Restaurante>> filtraPorTaxas(@RequestParam BigDecimal taxaInicial,
+			@RequestParam BigDecimal taxaFinal) {
+		return ResponseEntity.ok().body(service.filtraPorTaxas(taxaInicial, taxaFinal));
+	}
+
 	@PostMapping
 	public ResponseEntity<?> adiciona(@RequestBody Restaurante restaurante) {
 		try {
@@ -51,7 +59,8 @@ public class RestauranteController {
 	}
 
 	@PutMapping("/{restauranteId}")
-	public ResponseEntity<Restaurante> atualiza(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+	public ResponseEntity<Restaurante> atualiza(@PathVariable Long restauranteId,
+			@RequestBody Restaurante restaurante) {
 		try {
 			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(restauranteId, restaurante));
 		} catch (EntidadeNaoEncontradaException e) {

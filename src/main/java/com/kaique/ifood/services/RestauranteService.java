@@ -1,5 +1,6 @@
 package com.kaique.ifood.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,10 @@ public class RestauranteService {
 
 	public Optional<Restaurante> buscaPorId(Long id) {
 		return repository.findById(id);
+	}
+	
+	public List<Restaurante> filtraPorTaxas(BigDecimal taxaInicial , BigDecimal taxaFinal){
+		return repository.findByTaxaFreteBetween(taxaInicial, taxaFinal);
 	}
 
 	@Transactional
