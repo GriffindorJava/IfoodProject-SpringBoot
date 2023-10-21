@@ -37,7 +37,7 @@ public class RestauranteService {
 	}
 	
 	public List<Restaurante> buscaPorNomeEIdDeCozinha(String nome , BigDecimal id){
-		return repository.findByNomeContainingAndCozinhaId(nome, id);
+		return repository.consultaCozinha(nome, id);
 	}
 
 	@Transactional
