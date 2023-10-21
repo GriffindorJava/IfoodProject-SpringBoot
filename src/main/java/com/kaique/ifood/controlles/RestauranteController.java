@@ -50,7 +50,7 @@ public class RestauranteController {
 	}
 	
 	@GetMapping("/filtra/nome-e-id")
-	public ResponseEntity<List<Restaurante>> filtraPorTaxas(@RequestParam String nome,
+	public ResponseEntity<List<Restaurante>> buscaPorNomeEIdDeCozinha(@RequestParam String nome,
 			@RequestParam BigDecimal id) {
 		return ResponseEntity.ok().body(service.buscaPorNomeEIdDeCozinha(nome, id));
 	}
