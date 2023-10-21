@@ -10,4 +10,6 @@ import com.kaique.ifood.entities.Restaurante;
 public interface RestauranteRepository extends JpaRepository<Restaurante, Long>{
 
 	List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial , BigDecimal taxaFinal);
+	
+	List<Restaurante> findByNomeContainingAndCozinhaId(String Nome , BigDecimal id);
 }

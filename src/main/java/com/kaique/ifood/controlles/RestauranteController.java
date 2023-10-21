@@ -48,6 +48,12 @@ public class RestauranteController {
 			@RequestParam BigDecimal taxaFinal) {
 		return ResponseEntity.ok().body(service.filtraPorTaxas(taxaInicial, taxaFinal));
 	}
+	
+	@GetMapping("/filtra/nome-e-id")
+	public ResponseEntity<List<Restaurante>> filtraPorTaxas(@RequestParam String nome,
+			@RequestParam BigDecimal id) {
+		return ResponseEntity.ok().body(service.buscaPorNomeEIdDeCozinha(nome, id));
+	}
 
 	@PostMapping
 	public ResponseEntity<?> adiciona(@RequestBody Restaurante restaurante) {

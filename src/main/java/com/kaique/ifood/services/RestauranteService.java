@@ -35,6 +35,10 @@ public class RestauranteService {
 	public List<Restaurante> filtraPorTaxas(BigDecimal taxaInicial , BigDecimal taxaFinal){
 		return repository.findByTaxaFreteBetween(taxaInicial, taxaFinal);
 	}
+	
+	public List<Restaurante> buscaPorNomeEIdDeCozinha(String nome , BigDecimal id){
+		return repository.findByNomeContainingAndCozinhaId(nome, id);
+	}
 
 	@Transactional
 	public Restaurante adiciona(Restaurante restaurante) {
