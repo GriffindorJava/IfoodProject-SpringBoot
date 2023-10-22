@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.kaique.ifood.entities.Restaurante;
@@ -17,8 +16,9 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
 	 * nesse método os argumentos são passados com o mesmo nome das variáveis
 	 * inibindo a necessidade de usar a anotação @param("ex")
 	 */
-	@Query("SELECT r FROM Restaurante r WHERE r.nome LIKE %:nome% AND r.cozinha.id = :id")
-	List<Restaurante> consultaCozinha(@Param("nome") String nome, @Param("id") BigDecimal id);
+	
+	//@Query("SELECT r FROM Restaurante r WHERE r.nome LIKE %:nome% AND r.cozinha.id = :id")
+	List<Restaurante> consultarPorNome(@Param("nome") String nome, @Param("id") BigDecimal id);
 
 
 	/*
