@@ -39,6 +39,10 @@ public class RestauranteService {
 	public List<Restaurante> buscaPorNomeEIdDeCozinha(String nome , BigDecimal id){
 		return repository.consultarPorNome(nome, id);
 	}
+	
+	public List<Restaurante> buscaRTTPorNomeFrete(String nome, BigDecimal taxaFreteInicia, BigDecimal taxaFreteFinal) {
+		return repository.find(nome, taxaFreteInicia, taxaFreteFinal);
+	}
 
 	@Transactional
 	public Restaurante adiciona(Restaurante restaurante) {
