@@ -9,6 +9,9 @@ import com.kaique.ifood.entities.Restaurante;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
 
 @Repository
 public class RestauranteRepositoryImpl {
@@ -17,10 +20,12 @@ public class RestauranteRepositoryImpl {
 	private EntityManager manager;
 
 	public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
-		var jpql = "SELECT r FROM Restaurante r WHERE r.nome LIKE :pesquisa AND r.taxaFrete BETWEEN :taxa_inicial AND :taxa_final";
-
-		return manager.createQuery(jpql, Restaurante.class).setParameter("pesquisa", "%" + nome + "%")
-				.setParameter("taxa_inicial", taxaFreteInicial).setParameter("taxa_final", taxaFreteFinal)
-				.getResultList();
+				CriteriaBuilder bulder = manager.getCriteriaBuilder();
+				
+				CriteriaQuery<Restaurante> criterio = bulder.createQuery(Restaurante.class);
+				criterio.from(Restaurante.class);
+				
+				TypedQuery<Restaurante> query = manager.createQuery(criterio);
+				return query.getResultList();
 	}
 }
