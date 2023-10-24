@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.kaique.ifood.entities.Restaurante;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.repositories.RestauranteRepository;
-import com.kaique.ifood.repositories.spec.RestauranteSpecs;
 
 import jakarta.transaction.Transactional;
 
@@ -42,7 +41,7 @@ public class RestauranteService {
 	}
 
 	public List<Restaurante> restaurantesComFreteGratis(String nome) {
-		return repository.findAll(RestauranteSpecs.comFreteGratis().and(RestauranteSpecs.comNomeSemelhante(nome)));
+		return repository.findComFreteGratis(nome);
 	}
 
 	@Transactional

@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.kaique.ifood.entities.Restaurante;
 
-public interface RestauranteRepository extends JpaRepository<Restaurante, Long>, JpaSpecificationExecutor<Restaurante>{
+public interface RestauranteRepository extends JpaRepository<Restaurante, Long>, RestaurantesRepositoryQueries , JpaSpecificationExecutor<Restaurante>{
 
 	List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
 
@@ -27,7 +27,4 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long>,
 
 	// List<Restaurante> findByNomeContainingAndCozinhaId(String nome, BigDecimal
 	// id);
-	
-	List<Restaurante> find(String nome, BigDecimal taxaFreteInicia, BigDecimal taxaFreteFinal);
-
 }
