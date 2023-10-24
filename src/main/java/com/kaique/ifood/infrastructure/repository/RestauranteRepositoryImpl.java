@@ -1,9 +1,11 @@
 package com.kaique.ifood.infrastructure.repository;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.kaique.ifood.entities.Restaurante;
 
@@ -26,14 +28,23 @@ public class RestauranteRepositoryImpl {
 				
 				CriteriaQuery<Restaurante> criterio = bulder.createQuery(Restaurante.class);
 			    Root<Restaurante> root = criterio.from(Restaurante.class);
+			    
+			    var predicates = new  ArrayList<Predicate>();
+			    
+			    if(StringUtils.hasText(nome)) {
+			    	predicates.add( bulder.like(root.get("nome"),"%" + nome + "%"));
+			    }
 				
-			    Predicate nomePredicate = bulder.like(root.get("nome"),"%" + nome + "%");
+			    if(taxaFreteInicial != null) {
+			    	  predicates.add(bulder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial));
+			    }
+			    if(taxaFreteFinal != null) {
+			    	predicates.add(bulder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal));
+			    }
 			    
-			    Predicate taxaInicialPredicate = bulder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial);
+			  
 			    
-			    Predicate taxaFinalPredicate = bulder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal);
-			    
-			    criterio.where(nomePredicate , taxaInicialPredicate , taxaFinalPredicate);
+			    criterio.where(predicates.toArray(new Predicate[0]));
 			    
 				TypedQuery<Restaurante> query = manager.createQuery(criterio);
 				return query.getResultList();
