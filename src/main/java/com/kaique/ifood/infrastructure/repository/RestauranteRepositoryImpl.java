@@ -24,29 +24,27 @@ public class RestauranteRepositoryImpl {
 	private EntityManager manager;
 
 	public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
-				CriteriaBuilder bulder = manager.getCriteriaBuilder();
-				
-				CriteriaQuery<Restaurante> criterio = bulder.createQuery(Restaurante.class);
-			    Root<Restaurante> root = criterio.from(Restaurante.class);
-			    
-			    var predicates = new  ArrayList<Predicate>();
-			    
-			    if(StringUtils.hasText(nome)) {
-			    	predicates.add( bulder.like(root.get("nome"),"%" + nome + "%"));
-			    }
-				
-			    if(taxaFreteInicial != null) {
-			    	  predicates.add(bulder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial));
-			    }
-			    if(taxaFreteFinal != null) {
-			    	predicates.add(bulder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal));
-			    }
-			    
-			  
-			    
-			    criterio.where(predicates.toArray(new Predicate[0]));
-			    
-				TypedQuery<Restaurante> query = manager.createQuery(criterio);
-				return query.getResultList();
+		CriteriaBuilder bulder = manager.getCriteriaBuilder();
+
+		CriteriaQuery<Restaurante> criterio = bulder.createQuery(Restaurante.class);
+		Root<Restaurante> root = criterio.from(Restaurante.class);
+
+		var predicates = new ArrayList<Predicate>();
+
+		if (StringUtils.hasText(nome)) {
+			predicates.add(bulder.like(root.get("nome"), "%" + nome + "%"));
+		}
+
+		if (taxaFreteInicial != null) {
+			predicates.add(bulder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial));
+		}
+		if (taxaFreteFinal != null) {
+			predicates.add(bulder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal));
+		}
+
+		criterio.where(predicates.toArray(new Predicate[0]));
+
+		TypedQuery<Restaurante> query = manager.createQuery(criterio);
+		return query.getResultList();
 	}
 }

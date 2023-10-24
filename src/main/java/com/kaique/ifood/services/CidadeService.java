@@ -32,21 +32,15 @@ public class CidadeService {
 
 	@Transactional
 	public Cidade adiciona(Cidade cidade) {
-
-		if (cidade.getEstado() != null) {// implementação temporaria ale eu começar a usar validacões
-			if (cidadeRepository.findById(cidade.getEstado().getId()).isEmpty()) {
-				throw new EntidadeNaoEncontradaException(
-						String.format("Código %d de cozinha não foi encontrado ", cidade.getEstado().getId()));
-			}
-		}
 		return repository.save(cidade);
 	}
 
 	@Transactional
 	public Cidade atualiza(Long id, Cidade NovoCidade) {
-		if (repository.findById(id).isEmpty())
-			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
-
+		if (NovoCidade.getEstado() != null) {// implementação temporaria ale eu começar a usar validacões
+			if (repository.findById(id).isEmpty())
+				throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
+		}
 		Cidade cidadeAtual = repository.findById(id).get();
 		BeanUtils.copyProperties(NovoCidade, cidadeAtual, "id");
 		return repository.save(cidadeAtual);

@@ -41,7 +41,6 @@ public class CidadeController {
 		return ResponseEntity.notFound().build();
 	}
 
-
 	@PostMapping
 	public ResponseEntity<?> adiciona(@RequestBody Cidade cidade) {
 		try {

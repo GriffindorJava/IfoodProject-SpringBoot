@@ -10,8 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.kaique.ifood.entities.Restaurante;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
-import com.kaique.ifood.repositories.CozinhaRepository;
 import com.kaique.ifood.repositories.RestauranteRepository;
+import com.kaique.ifood.repositories.spec.RestauranteComFreteGratisSpec;
+import com.kaique.ifood.repositories.spec.RestauranteComNomeSemelhanteSpec;
 
 import jakarta.transaction.Transactional;
 
@@ -21,9 +22,6 @@ public class RestauranteService {
 	@Autowired
 	private RestauranteRepository repository;
 
-	@Autowired
-	private CozinhaRepository cozinhaRepository;
-
 	public List<Restaurante> listar() {
 		return repository.findAll();
 	}
@@ -31,27 +29,28 @@ public class RestauranteService {
 	public Optional<Restaurante> buscaPorId(Long id) {
 		return repository.findById(id);
 	}
-	
-	public List<Restaurante> filtraPorTaxas(BigDecimal taxaInicial , BigDecimal taxaFinal){
+
+	public List<Restaurante> filtraPorTaxas(BigDecimal taxaInicial, BigDecimal taxaFinal) {
 		return repository.findByTaxaFreteBetween(taxaInicial, taxaFinal);
 	}
-	
-	public List<Restaurante> buscaPorNomeEIdDeCozinha(String nome , BigDecimal id){
+
+	public List<Restaurante> buscaPorNomeEIdDeCozinha(String nome, BigDecimal id) {
 		return repository.consultarPorNome(nome, id);
 	}
-	
+
 	public List<Restaurante> buscaRTTPorNomeFrete(String nome, BigDecimal taxaFreteInicia, BigDecimal taxaFreteFinal) {
 		return repository.find(nome, taxaFreteInicia, taxaFreteFinal);
 	}
 
+	public List<Restaurante> restaurantesComFreteGratis(String nome) {
+		var comFreteGratis = new RestauranteComFreteGratisSpec();
+		var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
+
+		return repository.findAll(comFreteGratis.and(comNomeSemelhante));
+	}
+
 	@Transactional
 	public Restaurante adiciona(Restaurante restaurante) {
-		if (restaurante.getCozinha().getId() != null)//temporario
-			if (cozinhaRepository.findById(restaurante.getCozinha().getId()).isEmpty()) {
-				throw new EntidadeNaoEncontradaException(
-						String.format("Código %d de cozinha não foi encontrado ", restaurante.getCozinha().getId()));
-			}
-
 		return repository.save(restaurante);
 	}
 

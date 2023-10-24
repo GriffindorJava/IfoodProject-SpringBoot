@@ -51,7 +51,7 @@ public class CozinhaController {
 
 		return ResponseEntity.notFound().build();
 	}
-	
+
 	@GetMapping("/buscarPorNome/{nome}")
 	public ResponseEntity<List<Cozinha>> buscarPorNome(@RequestParam String nome) {
 		return ResponseEntity.status(HttpStatus.OK).body(service.buscarPorNome(nome));
