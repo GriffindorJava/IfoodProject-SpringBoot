@@ -2,8 +2,14 @@ package com.kaique.ifood.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -46,6 +52,14 @@ public class Restaurante implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "cozinha_id")
 	private Cozinha cozinha;
+	
+	@JsonIgnore
+	@CreationTimestamp
+	private LocalDateTime dataCadastro;
+	
+	@JsonIgnore
+	@UpdateTimestamp
+	private LocalDateTime dataAtualizacao;
 
 	@ManyToMany
 	@JoinTable(name = "tb_Restaurante_forma_pagamento", 
