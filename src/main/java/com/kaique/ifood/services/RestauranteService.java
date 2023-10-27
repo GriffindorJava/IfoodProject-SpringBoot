@@ -55,7 +55,7 @@ public class RestauranteService {
 			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
 
 		Restaurante restauranteAtual = repository.findById(id).get();
-		BeanUtils.copyProperties(NovoRestaurante, restauranteAtual, "id");
+		BeanUtils.copyProperties(NovoRestaurante, restauranteAtual, "id" , "formaPagamentos");
 		return repository.save(restauranteAtual);
 	}
 
