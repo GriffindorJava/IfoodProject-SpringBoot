@@ -1,5 +1,7 @@
 package com.kaique.ifood.entities;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
@@ -14,7 +16,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class Endereco {
+public class Endereco implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	@Column(name = "endereco_cep")
 	private String Cep;
