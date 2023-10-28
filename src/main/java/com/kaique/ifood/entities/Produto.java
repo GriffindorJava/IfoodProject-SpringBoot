@@ -3,6 +3,8 @@ package com.kaique.ifood.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,6 +38,7 @@ public class Produto implements Serializable{
 	
 	@ManyToOne
 	@JoinColumn(name = "restaurantes_id")
+	@JsonIgnore
 	private Restaurante restaurante;
 
 }

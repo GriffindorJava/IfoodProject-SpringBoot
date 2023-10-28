@@ -20,6 +20,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -46,13 +47,6 @@ public class Restaurante implements Serializable {
 	@JoinColumn(name = "taxa_frete")
 	private BigDecimal taxaFrete;
 	
-	@Embedded
-	private Endereco endereco;
-
-	@ManyToOne
-	@JoinColumn(name = "cozinha_id")
-	private Cozinha cozinha;
-	
 	@JsonIgnore
 	@CreationTimestamp
 	private LocalDateTime dataCadastro;
@@ -61,9 +55,22 @@ public class Restaurante implements Serializable {
 	@UpdateTimestamp
 	private LocalDateTime dataAtualizacao;
 
+	
+	@Embedded
+	private Endereco endereco;
+
+	@ManyToOne
+	@JoinColumn(name = "cozinha_id")
+	private Cozinha cozinha;
+	
+	@OneToMany(mappedBy = "restaurante")
+	private List<Produto> produtos = new ArrayList<>();
+
 	@ManyToMany
 	@JoinTable(name = "tb_Restaurante_forma_pagamento", 
 	joinColumns = @JoinColumn(name = "restaurante_id"), 
 	inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
 	private List<FormaPagamento> formaPagamentos = new ArrayList<>();
+	
+	
 }

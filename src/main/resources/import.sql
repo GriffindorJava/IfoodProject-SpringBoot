@@ -8,6 +8,9 @@ insert into tb_restaurante (nome , taxa_Frete , cozinha_id , endereco_cep , ende
 insert into tb_restaurante (nome , taxa_Frete , cozinha_id) values ('thai delivery' , 9.90 , 1 );
 insert into tb_restaurante (nome , taxa_Frete , cozinha_id) values ('tuk tuk comida indiana' , 15.90 , 2 );
 
+insert into tb_produto (nome , descricao , preco , ativo , restaurantes_id) values ('pão de queijo' , 'queijo' , 5.00 ,true , 1);
+insert into tb_produto (nome , descricao , preco , ativo , restaurantes_id) values ('trato da casa' , 'arroz feijão file de peixe' , 16.00 ,true , 1);
+
 insert into tb_estado (nome) values ('São paulo');
 insert into tb_estado(nome) values ('Rio de janeiro');
 
