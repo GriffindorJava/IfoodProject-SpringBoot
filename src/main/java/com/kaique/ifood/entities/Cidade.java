@@ -3,6 +3,7 @@ package com.kaique.ifood.entities;
 import java.io.Serializable;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,7 +34,8 @@ public class Cidade implements Serializable{
 	@NotBlank
 	private String nome;
 	
-	@ManyToOne
+	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "estado_id")
 	private Estado estado;
 }

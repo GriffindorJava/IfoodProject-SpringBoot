@@ -10,9 +10,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -59,7 +61,8 @@ public class Restaurante implements Serializable {
 	@Embedded
 	private Endereco endereco;
 
-	@ManyToOne
+    @JsonIgnoreProperties("hibernateLazyInitializer")
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cozinha_id")
 	private Cozinha cozinha;
 	

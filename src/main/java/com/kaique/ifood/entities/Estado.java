@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,6 +37,7 @@ public class Estado implements  Serializable{
 	@NotBlank
 	private String nome;
 	
+	@JsonIgnoreProperties("hibernateLazyInitializer")
 	@JsonIgnore
 	@OneToMany(mappedBy = "estado" )
 	private List<Cidade> cidades = new ArrayList<>();
