@@ -37,7 +37,6 @@ public class Estado implements  Serializable{
 	@NotBlank
 	private String nome;
 	
-	@JsonIgnoreProperties("hibernateLazyInitializer")
 	@JsonIgnore
 	@OneToMany(mappedBy = "estado" )
 	private List<Cidade> cidades = new ArrayList<>();

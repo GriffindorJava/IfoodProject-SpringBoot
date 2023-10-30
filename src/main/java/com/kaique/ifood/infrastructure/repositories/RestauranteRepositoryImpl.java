@@ -1,4 +1,4 @@
-package com.kaique.ifood.infrastructure.repository;
+package com.kaique.ifood.infrastructure.repositories;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
