@@ -50,10 +50,11 @@ public class RestauranteController {
 		return ResponseEntity.ok().body(service.filtraPorTaxas(taxaInicial, taxaFinal));
 	}
 
+	/*
 	@GetMapping("/filtra/nome-e-id")
 	public ResponseEntity<List<Restaurante>> buscaPorNomeEIdDeCozinha(String nome, BigDecimal id) {
 		return ResponseEntity.ok().body(service.buscaPorNomeEIdDeCozinha(nome, id));
-	}
+	}*/
 
 	@GetMapping("/filtra/por-nome-e-frete")
 	public ResponseEntity<List<Restaurante>> buscaRTTPorNomeFrete(String nome, @RequestParam BigDecimal taxaFreteInicia,

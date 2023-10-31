@@ -32,9 +32,9 @@ public class RestauranteService {
 		return repository.findByTaxaFreteBetween(taxaInicial, taxaFinal);
 	}
 
-	public List<Restaurante> buscaPorNomeEIdDeCozinha(String nome, BigDecimal id) {
+	/*public List<Restaurante> buscaPorNomeEIdDeCozinha(String nome, BigDecimal id) {
 		return repository.consultarPorNome(nome, id);
-	}
+	}*/
 
 	public List<Restaurante> buscaRTTPorNomeFrete(String nome, BigDecimal taxaFreteInicia, BigDecimal taxaFreteFinal) {
 		return repository.find(nome, taxaFreteInicia, taxaFreteFinal);
