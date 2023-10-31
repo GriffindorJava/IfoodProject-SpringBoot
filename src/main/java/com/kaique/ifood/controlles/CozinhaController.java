@@ -3,9 +3,7 @@ package com.kaique.ifood.controlles;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,14 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kaique.ifood.entities.Cozinha;
-import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.services.CozinhaService;
-
-import jakarta.validation.ConstraintViolationException;
 
 @RestController
 @RequestMapping("/cozinhas")
@@ -30,8 +25,8 @@ public class CozinhaController {
 	private CozinhaService service;
 
 	@GetMapping
-	public ResponseEntity<List<Cozinha>> listar() {
-		return ResponseEntity.status(HttpStatus.OK).body(service.listar());
+	public List<Cozinha> listar() {
+		return service.listar();
 	}
 
 	/*
@@ -45,41 +40,30 @@ public class CozinhaController {
 	 */
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Cozinha> buscaPorId(@PathVariable Long id) {
-		if (service.buscaPorId(id).isPresent())
-			return ResponseEntity.ok(service.buscaPorId(id).get());
-
-		return ResponseEntity.notFound().build();
+	public Cozinha buscaPorId(@PathVariable Long id) {
+		return service.buscaPorId(id);
 	}
 
 	@GetMapping("/buscarPorNome/{nome}")
-	public ResponseEntity<List<Cozinha>> buscarPorNome(@RequestParam String nome) {
-		return ResponseEntity.status(HttpStatus.OK).body(service.buscarPorNome(nome));
+	public List<Cozinha> buscarPorNome(String nome) {
+		return service.buscarPorNome(nome);
 	}
 
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public ResponseEntity<Cozinha> adiciona(@RequestBody Cozinha cozinha) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(service.adiciona(cozinha));
+	public Cozinha adiciona(@RequestBody Cozinha cozinha) {
+		return service.adiciona(cozinha);
 	}
 
+	@ResponseStatus(HttpStatus.CREATED)
 	@PutMapping("/{cozinhaId}")
-	public ResponseEntity<Cozinha> atualiza(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
-		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(cozinhaId, cozinha));
-		} catch (ConstraintViolationException | EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
+	public Cozinha atualiza(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+		return service.atualiza(cozinhaId, cozinha);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deletar(@PathVariable Long id) {
-		try {
-			service.deletar(id);
-			return ResponseEntity.noContent().build();
-		} catch (DataIntegrityViolationException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-		} //catch (EntidadeNaoEncontradaException e) {
-			//return ResponseEntity.notFound().build();
-		//}
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deletar(@PathVariable Long id) {
+		service.deletar(id);
 	}
 }

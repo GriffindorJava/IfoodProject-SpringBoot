@@ -1,7 +1,6 @@
 package com.kaique.ifood.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,9 @@ public class CozinhaService {
 		return repository.findAll();
 	}
 
-	public Optional<Cozinha> buscaPorId(Long id) {
-		return repository.findById(id);
+	public Cozinha buscaPorId(Long id) {
+		return repository.findById(id)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id)));
 	}
 
 	public List<Cozinha> buscarPorNome(String nome) {
@@ -38,21 +38,14 @@ public class CozinhaService {
 
 	@Transactional
 	public Cozinha atualiza(Long id, Cozinha NovaCozinha) {
-
-		if (repository.findById(id).isEmpty())
-			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
-
-		Cozinha CozinhaAtual = repository.findById(id).get();
+		Cozinha CozinhaAtual = buscaPorId(id);
 		BeanUtils.copyProperties(NovaCozinha, CozinhaAtual, "id");
 		return repository.save(CozinhaAtual);
 	}
 
 	@Transactional
 	public void deletar(Long id) {
-
-		if (repository.findById(id).isEmpty())
-			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado", id));
-
+		buscaPorId(id);
 		repository.deleteById(id);
 	}
 }
