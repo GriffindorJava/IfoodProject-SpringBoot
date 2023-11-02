@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kaique.ifood.entities.Cidade;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.services.CidadeService;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/cidades")
@@ -28,49 +28,33 @@ public class CidadeController {
 	@Autowired
 	private CidadeService service;
 
+	@ResponseStatus(HttpStatus.OK)
 	@GetMapping
-	public ResponseEntity<List<Cidade>> listar() {
-		return ResponseEntity.status(HttpStatus.OK).body(service.listar());
+	public List<Cidade> listar() {
+		return service.listar();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Cidade> buscaPorId(@PathVariable Long id) {
-		if (service.buscaPorId(id).isPresent())
-			return ResponseEntity.ok(service.buscaPorId(id).get());
-
-		return ResponseEntity.notFound().build();
+	public Cidade buscaPorId(@PathVariable Long id) {
+		return service.buscaPorId(id);
 	}
 
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public ResponseEntity<?> adiciona(@RequestBody Cidade cidade) {
-		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(service.adiciona(cidade));
-		} catch (ConstraintViolationException | EntidadeNaoEncontradaException | EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-		}
+	public Cidade adiciona(@Valid @RequestBody Cidade cidade) {
+		return service.adiciona(cidade);
 	}
 
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PutMapping("/{cidadeId}")
-	public ResponseEntity<Cidade> atualiza(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
-		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(cidadeId, cidade));
-		} catch (ConstraintViolationException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
+	public Cidade atualiza(@PathVariable Long cidadeId,@Valid @RequestBody Cidade cidade) {
+		return service.atualiza(cidadeId, cidade);
+
 	}
 
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deletar(@PathVariable Long id) {
-
-		try {
+	public void deletar(@PathVariable Long id) {
 			service.deletar(id);
-			return ResponseEntity.noContent().build();
-
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		}
-
 	}
 }

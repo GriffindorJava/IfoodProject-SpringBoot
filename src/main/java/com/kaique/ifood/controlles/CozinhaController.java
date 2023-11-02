@@ -55,7 +55,7 @@ public class CozinhaController {
 		return service.adiciona(cozinha);
 	}
 
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PutMapping("/{cozinhaId}")
 	public Cozinha atualiza(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
 		return service.atualiza(cozinhaId, cozinha);

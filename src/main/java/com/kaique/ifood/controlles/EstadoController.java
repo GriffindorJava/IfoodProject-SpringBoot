@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kaique.ifood.entities.Estado;
@@ -30,54 +31,28 @@ public class EstadoController {
 	private EstadoService service;
 
 	@GetMapping
-	public ResponseEntity<List<Estado>> listar() {
-		return ResponseEntity.status(HttpStatus.OK).body(service.listar());
+	public List<Estado> listar() {
+		return service.listar();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Estado> buscaPorId(@PathVariable Long id) {
-		if (service.buscaPorId(id).isPresent())
-			return ResponseEntity.ok(service.buscaPorId(id).get());
-
-		return ResponseEntity.notFound().build();
+	public Estado buscaPorId(@PathVariable Long id) {
+		return service.buscaPorId(id);
 	}
 
 	@PostMapping
-	public ResponseEntity<Estado> adiciona(@RequestBody Estado estado) {
-		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(service.adiciona(estado));
-		} catch (ConstraintViolationException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
-
+	public Estado adiciona(@RequestBody Estado estado) {
+			return service.adiciona(estado);
 	}
 
 	@PutMapping("/{estadiId}")
-	public ResponseEntity<Estado> atualiza(@PathVariable Long estadiId, @RequestBody Estado estado) {
-		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(estadiId, estado));
-
-		} catch (ConstraintViolationException | TransactionSystemException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
-
+	public Estado atualiza(@PathVariable Long estadiId, @RequestBody Estado estado) {
+		return service.atualiza(estadiId, estado);
 	}
 
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deletar(@PathVariable Long id) {
-
-		try {
+	public void deletar(@PathVariable Long id) {
 			service.deletar(id);
-			return ResponseEntity.noContent().build();
-
-		} catch (DataIntegrityViolationException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		}
-
 	}
 }

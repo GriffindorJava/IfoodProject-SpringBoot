@@ -1,13 +1,14 @@
 package com.kaique.ifood.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.kaique.ifood.entities.Estado;
+import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.repositories.EstadoRepository;
 
@@ -23,8 +24,9 @@ public class EstadoService {
 		return repository.findAll();
 	}
 
-	public Optional<Estado> buscaPorId(Long id) {
-		return repository.findById(id);
+	public Estado buscaPorId(Long id) {
+		return repository.findById(id)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id)));
 	}
 
 	@Transactional
@@ -44,8 +46,16 @@ public class EstadoService {
 
 	@Transactional
 	public void deletar(Long id) {
-		if (repository.findById(id).isEmpty())
-			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
-		repository.deleteById(id);
+		try {
+			if (repository.findById(id).isEmpty())
+				throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
+			
+			repository.deleteById(id);
+			repository.flush();
+			
+		} catch (DataIntegrityViolationException e) {
+			throw new EntidadeEmUsoException(String.format("Código %d não pode ser apagado pós esta em uso", id));
+		}
+
 	}
 }
