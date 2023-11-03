@@ -47,32 +47,28 @@ public class Restaurante implements Serializable {
 
 	@JoinColumn(name = "taxa_frete")
 	private BigDecimal taxaFrete;
-	
+
 	@JsonIgnore
 	@CreationTimestamp
 	private LocalDateTime dataCadastro;
-	
+
 	@JsonIgnore
 	@UpdateTimestamp
 	private LocalDateTime dataAtualizacao;
 
-	
 	@Embedded
 	private Endereco endereco;
 
 	@ManyToOne
 	@JoinColumn(name = "cozinha_id")
 	private Cozinha cozinha;
-	
-	@OneToMany(mappedBy = "restaurante" , fetch = FetchType.EAGER)
+
+	@OneToMany(mappedBy = "restaurante", fetch = FetchType.EAGER)
 	private List<Produto> produtos = new ArrayList<>();
 
 	@JsonIgnore
 	@ManyToMany
-	@JoinTable(name = "tb_Restaurante_forma_pagamento", 
-	joinColumns = @JoinColumn(name = "restaurante_id"), 
-	inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
+	@JoinTable(name = "tb_Restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
 	private List<FormaPagamento> formaPagamentos = new ArrayList<>();
-	
-	
+
 }

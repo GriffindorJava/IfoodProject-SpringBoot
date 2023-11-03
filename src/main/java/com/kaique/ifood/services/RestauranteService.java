@@ -6,11 +6,13 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
 import com.kaique.ifood.entities.Restaurante;
 import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
+import com.kaique.ifood.exception.NegocioException;
 import com.kaique.ifood.repositories.RestauranteRepository;
 
 import jakarta.transaction.Transactional;
@@ -54,8 +56,8 @@ public class RestauranteService {
 			repository.flush();
 			return novoRestaurante;
 
-		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeNaoEncontradaException(
+		} catch (DataIntegrityViolationException | JpaObjectRetrievalFailureException e) {
+			throw new NegocioException(
 					String.format("Código %d de cozinha não encontrado", restaurante.getCozinha().getId()));
 		}
 	}
@@ -70,7 +72,7 @@ public class RestauranteService {
 			repository.flush();
 			return atualizacaoOk;
 		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeNaoEncontradaException(
+			throw new NegocioException(
 					String.format("Código %d de cozinha não encontrado", NovoRestaurante.getCozinha().getId()));
 		}
 	}
@@ -78,13 +80,12 @@ public class RestauranteService {
 	@Transactional
 	public void deletar(Long id) {
 		try {
-			if (repository.findById(id).isEmpty())
-				throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
+			buscaPorId(id);
 			repository.deleteById(id);
 			repository.flush();
-		} catch (Exception e) {
+		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
-					String.format("Código %d não pode ser apagado pois tem um relacionamento com outra tabela", id));
+					String.format("O código %d não pode ser apagado, pois está relacionado com outra tabela.", id));
 		}
 
 	}

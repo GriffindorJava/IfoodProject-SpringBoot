@@ -28,7 +28,8 @@ public class RestauranteRepositoryImpl implements RestaurantesRepositoryQueries 
 	@PersistenceContext
 	private EntityManager manager;
 
-	@Autowired @Lazy
+	@Autowired
+	@Lazy
 	private RestauranteRepository restauranteRepository;
 
 	@Override

@@ -72,6 +72,6 @@ public class RestauranteController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
 	public void deletar(@PathVariable Long id) {
-			service.deletar(id);
+		service.deletar(id);
 	}
 }

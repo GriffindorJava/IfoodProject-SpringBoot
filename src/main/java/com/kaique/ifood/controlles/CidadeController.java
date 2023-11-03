@@ -44,14 +44,13 @@ public class CidadeController {
 	}
 
 	@PutMapping("/{cidadeId}")
-	public Cidade atualiza(@PathVariable Long cidadeId,@Valid @RequestBody Cidade cidade) {
+	public Cidade atualiza(@PathVariable Long cidadeId, @Valid @RequestBody Cidade cidade) {
 		return service.atualiza(cidadeId, cidade);
-
 	}
 
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
 	public void deletar(@PathVariable Long id) {
-			service.deletar(id);
+		service.deletar(id);
 	}
 }

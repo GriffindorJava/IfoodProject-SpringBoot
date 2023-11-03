@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.kaique.ifood.entities.Cozinha;
 
-public interface CozinhaRepository extends JpaRepository<Cozinha , Long>{
+public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
 
-	List<Cozinha>  findByNomeContainsIgnoreCase( String nome);
+	List<Cozinha> findByNomeContainsIgnoreCase(String nome);
 }

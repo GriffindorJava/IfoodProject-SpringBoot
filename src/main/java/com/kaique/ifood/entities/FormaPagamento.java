@@ -16,12 +16,13 @@ import lombok.Setter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 @Entity
 @Table(name = "tb_forma_Pagamento")
-public class FormaPagamento implements Serializable{
+public class FormaPagamento implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

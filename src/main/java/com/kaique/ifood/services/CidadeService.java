@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kaique.ifood.entities.Cidade;
-import com.kaique.ifood.exception.CorpoDaRequisicaoErradoException;
 import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
+import com.kaique.ifood.exception.NegocioException;
 import com.kaique.ifood.repositories.CidadeRepository;
 import com.kaique.ifood.repositories.EstadoRepository;
 
@@ -34,7 +34,7 @@ public class CidadeService {
 
 	@Transactional
 	public Cidade adiciona(Cidade cidade) {
-		estado.findById(cidade.getEstado().getId()).orElseThrow(() -> new CorpoDaRequisicaoErradoException(
+		estado.findById(cidade.getEstado().getId()).orElseThrow(() -> new NegocioException(
 				String.format("Estado de código %d não encontrado", cidade.getEstado().getId())));
 
 		return repository.save(cidade);
@@ -44,7 +44,7 @@ public class CidadeService {
 	public Cidade atualiza(Long id, Cidade NovaCidade) {
 
 		if (NovaCidade.getEstado().getId() != null)
-			estado.findById(NovaCidade.getEstado().getId()).orElseThrow(() -> new EntidadeEmUsoException(
+			estado.findById(NovaCidade.getEstado().getId()).orElseThrow(() -> new NegocioException(
 					String.format("Estado de código %d não encontrado", NovaCidade.getEstado().getId())));
 
 		Cidade cidadeAtual = buscaPorId(id);
@@ -54,8 +54,7 @@ public class CidadeService {
 
 	@Transactional
 	public void deletar(Long id) {
-		if (repository.findById(id).isEmpty())
-			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
+		buscaPorId(id);
 		repository.deleteById(id);
 
 	}

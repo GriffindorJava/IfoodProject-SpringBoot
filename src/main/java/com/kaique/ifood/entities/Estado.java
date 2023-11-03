@@ -22,21 +22,22 @@ import lombok.Setter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 @Entity
 @Table(name = "tb_estado")
-public class Estado implements  Serializable{
+public class Estado implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@EqualsAndHashCode.Include
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@NotBlank
 	private String nome;
-	
+
 	@JsonIgnore
-	@OneToMany(mappedBy = "estado" )
+	@OneToMany(mappedBy = "estado")
 	private List<Cidade> cidades = new ArrayList<>();
 }

@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.kaique.ifood.entities.Permissao;
 
-public interface PermissaoRepository extends JpaRepository <Permissao , Long>{
+public interface PermissaoRepository extends JpaRepository<Permissao, Long> {
 
 }

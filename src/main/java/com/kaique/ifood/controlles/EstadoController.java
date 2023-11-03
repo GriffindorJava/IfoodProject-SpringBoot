@@ -37,7 +37,7 @@ public class EstadoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
 	public Estado adiciona(@RequestBody Estado estado) {
-			return service.adiciona(estado);
+		return service.adiciona(estado);
 	}
 
 	@PutMapping("/{estadiId}")
@@ -48,6 +48,6 @@ public class EstadoController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
 	public void deletar(@PathVariable Long id) {
-			service.deletar(id);
+		service.deletar(id);
 	}
 }

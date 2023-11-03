@@ -21,7 +21,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Getter @Setter
+@Getter
+@Setter
 @Entity
 @Table(name = "tb_grupo")
 public class Grupo implements Serializable {
@@ -34,8 +35,6 @@ public class Grupo implements Serializable {
 	private String nome;
 
 	@ManyToMany
-	@JoinTable(name = "tb_grupo_permissao", 
-	joinColumns = @JoinColumn(name = "grupo_id"), 
-	inverseJoinColumns = @JoinColumn(name = "permissao_id"))
+	@JoinTable(name = "tb_grupo_permissao", joinColumns = @JoinColumn(name = "grupo_id"), inverseJoinColumns = @JoinColumn(name = "permissao_id"))
 	private List<Permissao> permissoes = new ArrayList<>();
 }

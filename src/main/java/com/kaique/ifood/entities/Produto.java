@@ -23,12 +23,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Getter @Setter
+@Getter
+@Setter
 @Entity
 @Table(name = "tb_produto")
-public class Produto implements Serializable{
+public class Produto implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@EqualsAndHashCode.Include
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +38,7 @@ public class Produto implements Serializable{
 	private String descricao;
 	private BigDecimal preco;
 	private Boolean ativo;
-	
+
 	@JsonIgnore
 	@JsonIgnoreProperties("hibernateLazyInitializer")
 	@ManyToOne(fetch = FetchType.LAZY)

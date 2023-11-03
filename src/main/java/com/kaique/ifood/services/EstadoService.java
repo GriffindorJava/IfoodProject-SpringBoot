@@ -36,10 +36,8 @@ public class EstadoService {
 
 	@Transactional
 	public Estado atualiza(Long id, Estado NovoEstado) {
-		if (repository.findById(id).isEmpty())
-			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
-
-		Estado estadoAtual = repository.findById(id).get();
+	
+		Estado estadoAtual = buscaPorId(id);
 		BeanUtils.copyProperties(NovoEstado, estadoAtual, "id");
 		return repository.save(estadoAtual);
 	}
@@ -47,14 +45,12 @@ public class EstadoService {
 	@Transactional
 	public void deletar(Long id) {
 		try {
-			if (repository.findById(id).isEmpty())
-				throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
-			
+			buscaPorId(id);
 			repository.deleteById(id);
 			repository.flush();
 			
 		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String.format("Código %d não pode ser apagado pós esta em uso", id));
+			throw new EntidadeEmUsoException(String.format("O código %d não pode ser apagado, pois está relacionado com outra tabela.", id));
 		}
 
 	}
