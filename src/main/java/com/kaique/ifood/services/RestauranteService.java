@@ -2,13 +2,14 @@ package com.kaique.ifood.services;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.kaique.ifood.entities.Restaurante;
+import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.repositories.RestauranteRepository;
 
@@ -24,17 +25,19 @@ public class RestauranteService {
 		return repository.findAll();
 	}
 
-	public Optional<Restaurante> buscaPorId(Long id) {
-		return repository.findById(id);
+	public Restaurante buscaPorId(Long id) {
+		return repository.findById(id)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id)));
 	}
 
 	public List<Restaurante> filtraPorTaxas(BigDecimal taxaInicial, BigDecimal taxaFinal) {
 		return repository.findByTaxaFreteBetween(taxaInicial, taxaFinal);
 	}
 
-	/*public List<Restaurante> buscaPorNomeEIdDeCozinha(String nome, BigDecimal id) {
-		return repository.consultarPorNome(nome, id);
-	}*/
+	/*
+	 * public List<Restaurante> buscaPorNomeEIdDeCozinha(String nome, BigDecimal id)
+	 * { return repository.consultarPorNome(nome, id); }
+	 */
 
 	public List<Restaurante> buscaRTTPorNomeFrete(String nome, BigDecimal taxaFreteInicia, BigDecimal taxaFreteFinal) {
 		return repository.find(nome, taxaFreteInicia, taxaFreteFinal);
@@ -46,24 +49,43 @@ public class RestauranteService {
 
 	@Transactional
 	public Restaurante adiciona(Restaurante restaurante) {
-		return repository.save(restaurante);
+		try {
+			Restaurante novoRestaurante = repository.save(restaurante);
+			repository.flush();
+			return novoRestaurante;
+
+		} catch (DataIntegrityViolationException e) {
+			throw new EntidadeNaoEncontradaException(
+					String.format("Código %d de cozinha não encontrado", restaurante.getCozinha().getId()));
+		}
 	}
 
 	@Transactional
 	public Restaurante atualiza(Long id, Restaurante NovoRestaurante) {
-		if (repository.findById(id).isEmpty())
-			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
-
-		Restaurante restauranteAtual = repository.findById(id).get();
-		BeanUtils.copyProperties(NovoRestaurante, restauranteAtual, "id" , "formaPagamentos" , "endereco" , "dataCadastro");
-		return repository.save(restauranteAtual);
+		try {
+			Restaurante restauranteAtual = buscaPorId(id);
+			BeanUtils.copyProperties(NovoRestaurante, restauranteAtual, "id", "formaPagamentos", "endereco",
+					"dataCadastro");
+			Restaurante atualizacaoOk = repository.save(restauranteAtual);
+			repository.flush();
+			return atualizacaoOk;
+		} catch (DataIntegrityViolationException e) {
+			throw new EntidadeNaoEncontradaException(
+					String.format("Código %d de cozinha não encontrado", NovoRestaurante.getCozinha().getId()));
+		}
 	}
 
 	@Transactional
 	public void deletar(Long id) {
+		try {
+			if (repository.findById(id).isEmpty())
+				throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
+			repository.deleteById(id);
+			repository.flush();
+		} catch (Exception e) {
+			throw new EntidadeEmUsoException(
+					String.format("Código %d não pode ser apagado pois tem um relacionamento com outra tabela", id));
+		}
 
-		if (repository.findById(id).isEmpty())
-			throw new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id));
-		repository.deleteById(id);
 	}
 }

@@ -4,9 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,10 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kaique.ifood.entities.Restaurante;
-import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.services.RestauranteService;
-
-import jakarta.validation.ConstraintViolationException;
 
 @RestController
 @RequestMapping("/restaurantes")
@@ -32,73 +27,51 @@ public class RestauranteController {
 	private RestauranteService service;
 
 	@GetMapping
-	public ResponseEntity<List<Restaurante>> listar() {
-		return ResponseEntity.status(HttpStatus.OK).body(service.listar());
+	public List<Restaurante> listar() {
+		return service.listar();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Restaurante> buscaPorId(@PathVariable Long id) {
-		if (service.buscaPorId(id).isPresent())
-			return ResponseEntity.ok(service.buscaPorId(id).get());
-
-		return ResponseEntity.notFound().build();
+	public Restaurante buscaPorId(@PathVariable Long id) {
+		return service.buscaPorId(id);
 	}
 
 	@GetMapping("/filtroTaxa/por-taxa-frete")
-	public ResponseEntity<List<Restaurante>> filtraPorTaxas(BigDecimal taxaInicial,
-			@RequestParam BigDecimal taxaFinal) {
-		return ResponseEntity.ok().body(service.filtraPorTaxas(taxaInicial, taxaFinal));
+	public List<Restaurante> filtraPorTaxas(BigDecimal taxaInicial, @RequestParam BigDecimal taxaFinal) {
+		return service.filtraPorTaxas(taxaInicial, taxaFinal);
 	}
 
 	/*
-	@GetMapping("/filtra/nome-e-id")
-	public ResponseEntity<List<Restaurante>> buscaPorNomeEIdDeCozinha(String nome, BigDecimal id) {
-		return ResponseEntity.ok().body(service.buscaPorNomeEIdDeCozinha(nome, id));
-	}*/
+	 * @GetMapping("/filtra/nome-e-id") public ResponseEntity<List<Restaurante>>
+	 * buscaPorNomeEIdDeCozinha(String nome, BigDecimal id) { return
+	 * ResponseEntity.ok().body(service.buscaPorNomeEIdDeCozinha(nome, id)); }
+	 */
 
 	@GetMapping("/filtra/por-nome-e-frete")
-	public ResponseEntity<List<Restaurante>> buscaRTTPorNomeFrete(String nome, @RequestParam BigDecimal taxaFreteInicia,
+	public List<Restaurante> buscaRTTPorNomeFrete(String nome, @RequestParam BigDecimal taxaFreteInicia,
 			BigDecimal taxaFreteFinal) {
-		return ResponseEntity.ok().body(service.buscaRTTPorNomeFrete(nome, taxaFreteInicia, taxaFreteFinal));
+		return service.buscaRTTPorNomeFrete(nome, taxaFreteInicia, taxaFreteFinal);
 	}
 
-	@ResponseStatus(HttpStatus.OK)
-	@GetMapping("filtra/com-frete-gratis")
+	@GetMapping("/filtra/com-frete-gratis")
 	public List<Restaurante> restaurantesComFreteGratis(String nome) {
 		return service.restaurantesComFreteGratis(nome);
 	}
 
+	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public ResponseEntity<?> adiciona(@RequestBody Restaurante restaurante) {
-		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(service.adiciona(restaurante));
-		} catch (ConstraintViolationException | NullPointerException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-		}
+	public Restaurante adiciona(@RequestBody Restaurante restaurante) {
+		return service.adiciona(restaurante);
 	}
 
 	@PutMapping("/{restauranteId}")
-	public ResponseEntity<Restaurante> atualiza(@PathVariable Long restauranteId,
-			@RequestBody Restaurante restaurante) {
-		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(service.atualiza(restauranteId, restaurante));
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		} catch (DataIntegrityViolationException e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-		}
+	public Restaurante atualiza(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+		return service.atualiza(restauranteId, restaurante);
 	}
 
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deletar(@PathVariable Long id) {
-
-		try {
+	public void deletar(@PathVariable Long id) {
 			service.deletar(id);
-			return ResponseEntity.noContent().build();
-
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		}
-
 	}
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,9 +38,10 @@ public class Produto implements Serializable{
 	private BigDecimal preco;
 	private Boolean ativo;
 	
+	@JsonIgnore
+	@JsonIgnoreProperties("hibernateLazyInitializer")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "restaurantes_id")
-	@JsonIgnore
 	private Restaurante restaurante;
 
 }
