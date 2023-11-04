@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kaique.ifood.entities.Cidade;
-import com.kaique.ifood.exception.EntidadeEmUsoException;
-import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
+import com.kaique.ifood.exception.CidadeNaoEncontradaException;
 import com.kaique.ifood.exception.NegocioException;
 import com.kaique.ifood.repositories.CidadeRepository;
 import com.kaique.ifood.repositories.EstadoRepository;
@@ -28,8 +27,7 @@ public class CidadeService {
 	}
 
 	public Cidade buscaPorId(Long id) {
-		return repository.findById(id)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id)));
+		return repository.findById(id).orElseThrow(() -> new CidadeNaoEncontradaException(id));
 	}
 
 	@Transactional

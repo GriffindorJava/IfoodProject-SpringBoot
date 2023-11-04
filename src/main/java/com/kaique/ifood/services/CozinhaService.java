@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kaique.ifood.entities.Cozinha;
-import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
+import com.kaique.ifood.exception.CozinhaNaoEncontradaException;
 import com.kaique.ifood.repositories.CozinhaRepository;
 
 import jakarta.transaction.Transactional;
@@ -23,8 +23,7 @@ public class CozinhaService {
 	}
 
 	public Cozinha buscaPorId(Long id) {
-		return repository.findById(id)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id)));
+		return repository.findById(id).orElseThrow(() -> new CozinhaNaoEncontradaException(id));
 	}
 
 	public List<Cozinha> buscarPorNome(String nome) {

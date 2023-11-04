@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.kaique.ifood.entities.Estado;
 import com.kaique.ifood.exception.EntidadeEmUsoException;
-import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
+import com.kaique.ifood.exception.EstadoNaoEncontradaException;
 import com.kaique.ifood.repositories.EstadoRepository;
 
 import jakarta.transaction.Transactional;
@@ -25,8 +25,7 @@ public class EstadoService {
 	}
 
 	public Estado buscaPorId(Long id) {
-		return repository.findById(id)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id)));
+		return repository.findById(id).orElseThrow(() -> new EstadoNaoEncontradaException(id));
 	}
 
 	@Transactional
@@ -36,7 +35,7 @@ public class EstadoService {
 
 	@Transactional
 	public Estado atualiza(Long id, Estado NovoEstado) {
-	
+
 		Estado estadoAtual = buscaPorId(id);
 		BeanUtils.copyProperties(NovoEstado, estadoAtual, "id");
 		return repository.save(estadoAtual);
@@ -48,9 +47,9 @@ public class EstadoService {
 			buscaPorId(id);
 			repository.deleteById(id);
 			repository.flush();
-			
+
 		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(String.format("O código %d não pode ser apagado, pois está relacionado com outra tabela.", id));
+			throw new EntidadeEmUsoException(id);
 		}
 
 	}

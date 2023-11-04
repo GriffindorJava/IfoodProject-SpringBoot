@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.kaique.ifood.entities.Restaurante;
 import com.kaique.ifood.exception.EntidadeEmUsoException;
-import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.exception.NegocioException;
+import com.kaique.ifood.exception.RestauranteNaoEncontradaException;
 import com.kaique.ifood.repositories.RestauranteRepository;
 
 import jakarta.transaction.Transactional;
@@ -28,8 +28,7 @@ public class RestauranteService {
 	}
 
 	public Restaurante buscaPorId(Long id) {
-		return repository.findById(id)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Código %d não encontrado ", id)));
+		return repository.findById(id).orElseThrow(() -> new RestauranteNaoEncontradaException(id));
 	}
 
 	public List<Restaurante> filtraPorTaxas(BigDecimal taxaInicial, BigDecimal taxaFinal) {
@@ -84,8 +83,7 @@ public class RestauranteService {
 			repository.deleteById(id);
 			repository.flush();
 		} catch (DataIntegrityViolationException e) {
-			throw new EntidadeEmUsoException(
-					String.format("O código %d não pode ser apagado, pois está relacionado com outra tabela.", id));
+			throw new EntidadeEmUsoException(id);
 		}
 
 	}
