@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.kaique.ifood.entities.Cozinha;
 import com.kaique.ifood.exception.CozinhaNaoEncontradaException;
+import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.repositories.CozinhaRepository;
 
 import jakarta.transaction.Transactional;
@@ -44,7 +46,12 @@ public class CozinhaService {
 
 	@Transactional
 	public void deletar(Long id) {
-		buscaPorId(id);
-		repository.deleteById(id);
+		try {
+			buscaPorId(id);
+			repository.deleteById(id);
+			repository.flush();
+		} catch (DataIntegrityViolationException e) {
+			throw new EntidadeEmUsoException(id);
+		}
 	}
 }
