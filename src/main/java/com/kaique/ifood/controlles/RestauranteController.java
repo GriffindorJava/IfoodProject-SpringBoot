@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kaique.ifood.entities.Restaurante;
 import com.kaique.ifood.services.RestauranteService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/restaurantes")
 public class RestauranteController {
@@ -60,12 +62,12 @@ public class RestauranteController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public Restaurante adiciona(@RequestBody Restaurante restaurante) {
+	public Restaurante adiciona(@Valid @RequestBody Restaurante restaurante) {
 		return service.adiciona(restaurante);
 	}
 
 	@PutMapping("/{restauranteId}")
-	public Restaurante atualiza(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+	public Restaurante atualiza(@PathVariable Long restauranteId,@Valid @RequestBody Restaurante restaurante) {
 		return service.atualiza(restauranteId, restaurante);
 	}
 
