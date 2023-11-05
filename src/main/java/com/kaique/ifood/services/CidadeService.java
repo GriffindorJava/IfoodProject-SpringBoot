@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kaique.ifood.entities.Cidade;
+import com.kaique.ifood.exception.ChaveEstrangeiraNaoEncontradaException;
 import com.kaique.ifood.exception.CidadeNaoEncontradaException;
-import com.kaique.ifood.exception.NegocioException;
 import com.kaique.ifood.repositories.CidadeRepository;
 import com.kaique.ifood.repositories.EstadoRepository;
 
@@ -32,8 +32,8 @@ public class CidadeService {
 
 	@Transactional
 	public Cidade adiciona(Cidade cidade) {
-		estado.findById(cidade.getEstado().getId()).orElseThrow(() -> new NegocioException(
-				String.format("Estado de código %d não encontrado", cidade.getEstado().getId())));
+		estado.findById(cidade.getEstado().getId())
+				.orElseThrow(() -> new ChaveEstrangeiraNaoEncontradaException("Estado", cidade.getEstado().getId()));
 
 		return repository.save(cidade);
 	}
@@ -42,8 +42,8 @@ public class CidadeService {
 	public Cidade atualiza(Long id, Cidade NovaCidade) {
 
 		if (NovaCidade.getEstado().getId() != null)
-			estado.findById(NovaCidade.getEstado().getId()).orElseThrow(() -> new NegocioException(
-					String.format("Estado de código %d não encontrado", NovaCidade.getEstado().getId())));
+			estado.findById(NovaCidade.getEstado().getId()).orElseThrow(
+					() -> new ChaveEstrangeiraNaoEncontradaException("Estado", NovaCidade.getEstado().getId()));
 
 		Cidade cidadeAtual = buscaPorId(id);
 		BeanUtils.copyProperties(NovaCidade, cidadeAtual, "id");

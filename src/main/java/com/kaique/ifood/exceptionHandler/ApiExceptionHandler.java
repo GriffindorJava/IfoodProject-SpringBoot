@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.kaique.ifood.exception.ChaveEstrangeiraNaoEncontradaException;
 import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.exception.NegocioException;
@@ -34,9 +35,29 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(NegocioException.class)
 	public ResponseEntity<?> trataNegocioException(NegocioException e, WebRequest request) {
 
-		return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+		ApiErro erro = ApiErro.builder()
+				.Status(HttpStatus.CONFLICT.value())
+				.type(ProblemType.NEGOCIO.getUrl())
+				.title(ProblemType.NEGOCIO.getTitle())
+				.detail(e.getMessage())
+				.build();
+		
+		return handleExceptionInternal(e, erro , new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
+	@ExceptionHandler(ChaveEstrangeiraNaoEncontradaException.class)
+	public ResponseEntity<?> trataChaveEstrangeiraNaoEncontradaException(ChaveEstrangeiraNaoEncontradaException e , WebRequest request) {
+		
+		ApiErro erro = ApiErro.builder()
+				.Status(HttpStatus.BAD_REQUEST.value())
+				.type(ProblemType.CHAVE_ESTRANGEIRA_NAO_ENCONTRA.getUrl())
+				.title(ProblemType.CHAVE_ESTRANGEIRA_NAO_ENCONTRA.getTitle())
+				.detail(e.getMessage())
+				.build();
+		
+		return handleExceptionInternal(e, erro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<?> trataEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e, WebRequest request) {
 
@@ -46,12 +67,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				.title(ProblemType.ENTIDADE_NAO_ENCONTRADA.getTitle())
 				.detail(e.getMessage())
 				.build();
-		
+
 		return handleExceptionInternal(e, erro, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
 
 	@ExceptionHandler(EntidadeEmUsoException.class)
 	public ResponseEntity<?> trataEntidadeEmUsoException(EntidadeEmUsoException e, WebRequest request) {
-		return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
+
+		ApiErro erro = ApiErro.builder()
+				.Status(HttpStatus.CONFLICT.value())
+				.type(ProblemType.ENTIDADE_EM_USO.getUrl())
+				.title(ProblemType.ENTIDADE_EM_USO.getTitle())
+				.detail(e.getMessage())
+				.build();
+
+		return handleExceptionInternal(e, erro, new HttpHeaders(), HttpStatus.CONFLICT, request);
 	}
 }
