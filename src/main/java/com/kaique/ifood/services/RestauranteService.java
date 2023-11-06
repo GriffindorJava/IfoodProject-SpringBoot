@@ -10,8 +10,8 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
 import com.kaique.ifood.entities.Restaurante;
+import com.kaique.ifood.exception.ChaveEstrangeiraNaoEncontradaException;
 import com.kaique.ifood.exception.EntidadeEmUsoException;
-import com.kaique.ifood.exception.NegocioException;
 import com.kaique.ifood.exception.RestauranteNaoEncontradaException;
 import com.kaique.ifood.repositories.RestauranteRepository;
 
@@ -56,8 +56,7 @@ public class RestauranteService {
 			return novoRestaurante;
 
 		} catch (DataIntegrityViolationException | JpaObjectRetrievalFailureException e) {
-			throw new NegocioException(
-					String.format("Código %d de cozinha não encontrado", restaurante.getCozinha().getId()));
+			throw new ChaveEstrangeiraNaoEncontradaException("cozinha", restaurante.getCozinha().getId());
 		}
 	}
 
@@ -71,8 +70,7 @@ public class RestauranteService {
 			repository.flush();
 			return atualizacaoOk;
 		} catch (DataIntegrityViolationException e) {
-			throw new NegocioException(
-					String.format("Código %d de cozinha não encontrado", NovoRestaurante.getCozinha().getId()));
+			throw new ChaveEstrangeiraNaoEncontradaException("cozinha", NovoRestaurante.getCozinha().getId());
 		}
 	}
 
