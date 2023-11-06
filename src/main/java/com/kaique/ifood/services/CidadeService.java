@@ -41,7 +41,7 @@ public class CidadeService {
 	@Transactional
 	public Cidade atualiza(Long id, Cidade NovaCidade) {
 
-		if (NovaCidade.getEstado().getId() != null)
+		if (NovaCidade.getEstado() != null)
 			estado.findById(NovaCidade.getEstado().getId()).orElseThrow(
 					() -> new ChaveEstrangeiraNaoEncontradaException("Estado", NovaCidade.getEstado().getId()));
 

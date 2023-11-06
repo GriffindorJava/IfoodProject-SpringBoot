@@ -11,13 +11,18 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.kaique.ifood.exception.ChaveEstrangeiraNaoEncontradaException;
 import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.exception.NegocioException;
+
+import ch.qos.logback.core.status.Status;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -47,9 +52,41 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
 		}
 
+		if (rootCause instanceof IgnoredPropertyException) {
+			return tratarPropertyBindingException((IgnoredPropertyException) rootCause, headers, status, request);
+		}
+
+		if (rootCause instanceof UnrecognizedPropertyException) {
+			return tratarUnrecognizedPropertyException((UnrecognizedPropertyException) rootCause, headers, status,
+					request);
+		}
+
 		ApiErro erro = ApiErro.builder().Status(status.value()).type(ProblemType.CORPO_ILEGIVEL.getUrl())
 				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
 				.detail("O corpo da requisição esta inválido. verifique o erro de sintaxe").build();
+
+		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+
+	private ResponseEntity<Object> tratarUnrecognizedPropertyException(UnrecognizedPropertyException ex,
+			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+		String path = ex.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
+
+		ApiErro erro = ApiErro.builder().Status(status.value()).type(ProblemType.CORPO_ILEGIVEL.getUrl())
+				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
+				.detail(String.format("O campo '%s' não existe, por gentileza verificar", path)).build();
+
+		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+
+	private ResponseEntity<Object> tratarPropertyBindingException(IgnoredPropertyException ex, HttpHeaders headers,
+			HttpStatusCode status, WebRequest request) {
+		String path = ex.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
+
+		ApiErro erro = ApiErro.builder().Status(status.value()).type(ProblemType.CORPO_ILEGIVEL.getUrl())
+				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
+				.detail(String.format("O campo '%s' está sendo ignorado e não deve ser enviado na requisição.", path))
+				.build();
 
 		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
@@ -67,6 +104,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				.build();
 
 		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<?> trataMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e,
+			WebRequest request) {
+
+		ApiErro erro = ApiErro.builder().Status(HttpStatus.BAD_REQUEST.value())
+				.type(ProblemType.PARAMETRO_INVALIDO.getUrl()).title(ProblemType.PARAMETRO_INVALIDO.getTitle())
+				.detail(String.format(
+						"O parâmetro de URL '%s' recebeu um valor '%s' que é do tipo inválido, por gentileza informe um valor do tipo '%s' ",
+						e.getName(), e.getValue(), e.getRequiredType().getSimpleName()))
+				.build();
+
+		return handleExceptionInternal(e, erro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
 	@ExceptionHandler(NegocioException.class)
