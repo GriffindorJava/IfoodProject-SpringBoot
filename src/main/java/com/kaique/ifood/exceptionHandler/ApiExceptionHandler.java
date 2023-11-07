@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fasterxml.jackson.databind.exc.IgnoredPropertyException;
@@ -21,8 +22,6 @@ import com.kaique.ifood.exception.ChaveEstrangeiraNaoEncontradaException;
 import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.exception.NegocioException;
-
-import ch.qos.logback.core.status.Status;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -49,7 +48,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		Throwable rootCause = ExceptionUtils.getRootCause(ex);
 
 		if (rootCause instanceof InvalidFormatException) {
-			return handleInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
+			return trataInvalidFormatException((InvalidFormatException) rootCause, headers, status, request);
 		}
 
 		if (rootCause instanceof IgnoredPropertyException) {
@@ -61,7 +60,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 					request);
 		}
 
-		ApiErro erro = ApiErro.builder().Status(status.value()).type(ProblemType.CORPO_ILEGIVEL.getUrl())
+		ApiErro erro = ApiErro.builder()
+				.Status(status.value())
+				.type(ProblemType.CORPO_ILEGIVEL.getUrl())
 				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
 				.detail("O corpo da requisição esta inválido. verifique o erro de sintaxe").build();
 
@@ -72,7 +73,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		String path = ex.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
 
-		ApiErro erro = ApiErro.builder().Status(status.value()).type(ProblemType.CORPO_ILEGIVEL.getUrl())
+		ApiErro erro = ApiErro.builder()
+				.Status(status.value())
+				.type(ProblemType.CORPO_ILEGIVEL.getUrl())
 				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
 				.detail(String.format("O campo '%s' não existe, por gentileza verificar", path)).build();
 
@@ -83,20 +86,24 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpStatusCode status, WebRequest request) {
 		String path = ex.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
 
-		ApiErro erro = ApiErro.builder().Status(status.value()).type(ProblemType.CORPO_ILEGIVEL.getUrl())
+		ApiErro erro = ApiErro.builder()
+				.Status(status.value())
+				.type(ProblemType.CORPO_ILEGIVEL.getUrl())
 				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
 				.detail(String.format("O campo '%s' está sendo ignorado e não deve ser enviado na requisição.", path))
 				.build();
 
 		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
-
-	private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex, HttpHeaders headers,
+	
+	private ResponseEntity<Object> trataInvalidFormatException(InvalidFormatException ex, HttpHeaders headers,
 			HttpStatusCode status, WebRequest request) {
 
 		String path = ex.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
 
-		ApiErro erro = ApiErro.builder().Status(status.value()).type(ProblemType.CORPO_ILEGIVEL.getUrl())
+		ApiErro erro = ApiErro.builder()
+				.Status(status.value())
+				.type(ProblemType.CORPO_ILEGIVEL.getUrl())
 				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
 				.detail(String.format(
 						"A propriedade '%s' recebeu o valor '%s' , que é de um tipo inválido. corrija e informe um valor compativel com o tipo %s. ",
@@ -106,18 +113,33 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
+	@Override
+	protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
+			HttpStatusCode status, WebRequest request) {
+
+	    ApiErro erro = ApiErro.builder()
+	            .Status(status.value())
+	            .type(ProblemType.RECURSO_NAO_ENCONTRADO.getUrl())
+	            .title(ProblemType.RECURSO_NAO_ENCONTRADO.getTitle())
+	            .detail(String.format("O recurso '%s', que você tentou acessar, é inexistente", ex.getRequestURL()))
+	            .build();
+
+	    return handleExceptionInternal(ex, erro, headers, status, request);
+	}
+
+	
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<?> trataMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e,
 			WebRequest request) {
 
-		ApiErro erro = ApiErro.builder().Status(HttpStatus.BAD_REQUEST.value())
+		ApiErro erro = ApiErro.builder().Status(HttpStatus.NOT_FOUND.value())
 				.type(ProblemType.PARAMETRO_INVALIDO.getUrl()).title(ProblemType.PARAMETRO_INVALIDO.getTitle())
 				.detail(String.format(
 						"O parâmetro de URL '%s' recebeu um valor '%s' que é do tipo inválido, por gentileza informe um valor do tipo '%s' ",
 						e.getName(), e.getValue(), e.getRequiredType().getSimpleName()))
 				.build();
 
-		return handleExceptionInternal(e, erro, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+		return handleExceptionInternal(e, erro, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
 
 	@ExceptionHandler(NegocioException.class)
