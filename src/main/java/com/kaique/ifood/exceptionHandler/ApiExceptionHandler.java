@@ -1,5 +1,6 @@
 package com.kaique.ifood.exceptionHandler;
 
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -61,6 +63,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		}
 
 		ApiErro erro = ApiErro.builder()
+				.timestamp(LocalDateTime.now())
 				.Status(status.value())
 				.type(ProblemType.CORPO_ILEGIVEL.getUrl())
 				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
@@ -76,6 +79,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String path = ex.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
 
 		ApiErro erro = ApiErro.builder()
+				.timestamp(LocalDateTime.now())
 				.Status(status.value())
 				.type(ProblemType.CORPO_ILEGIVEL.getUrl())
 				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
@@ -90,6 +94,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String path = ex.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
 
 		ApiErro erro = ApiErro.builder()
+				.timestamp(LocalDateTime.now())
 				.Status(status.value()).type(ProblemType.CORPO_ILEGIVEL.getUrl())
 				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
 				.detail(String.format("O campo '%s' está sendo ignorado e não deve ser enviado na requisição.", path))
@@ -104,6 +109,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String path = ex.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
 
 		ApiErro erro = ApiErro.builder()
+				.timestamp(LocalDateTime.now())
 				.Status(status.value())
 				.type(ProblemType.CORPO_ILEGIVEL.getUrl())
 				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
@@ -119,6 +125,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> trataException(Exception ex , WebRequest request) {
 		
 		ApiErro erro =  ApiErro.builder()
+				.timestamp(LocalDateTime.now())
 				.Status(HttpStatus.INTERNAL_SERVER_ERROR.value())
 				.type(ProblemType.ERRO_DE_SISTEMA.getUrl())
 				.title(ProblemType.ERRO_DE_SISTEMA.getTitle())
@@ -134,6 +141,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			WebRequest request) {
 
 		ApiErro erro = ApiErro.builder()
+				.timestamp(LocalDateTime.now())
 				.Status(HttpStatus.NOT_FOUND.value())
 				.type(ProblemType.PARAMETRO_INVALIDO.getUrl())
 				.title(ProblemType.PARAMETRO_INVALIDO.getTitle())
@@ -149,6 +157,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> trataNegocioException(NegocioException e, WebRequest request) {
 
 		ApiErro erro = ApiErro.builder()
+				.timestamp(LocalDateTime.now())
 				.Status(HttpStatus.CONFLICT.value())
 				.type(ProblemType.NEGOCIO.getUrl())
 				.title(ProblemType.NEGOCIO.getTitle())
@@ -163,6 +172,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			WebRequest request) {
 
 		ApiErro erro = ApiErro.builder()
+				.timestamp(LocalDateTime.now())
 				.Status(HttpStatus.BAD_REQUEST.value())
 				.type(ProblemType.CHAVE_ESTRANGEIRA_NAO_ENCONTRA.getUrl())
 				.title(ProblemType.CHAVE_ESTRANGEIRA_NAO_ENCONTRA.getTitle())
@@ -176,6 +186,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> trataEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e, WebRequest request) {
 
 		ApiErro erro = ApiErro.builder()
+				.timestamp(LocalDateTime.now())
 				.Status(HttpStatus.NOT_FOUND.value())
 				.type(ProblemType.ENTIDADE_NAO_ENCONTRADA.getUrl())
 				.title(ProblemType.ENTIDADE_NAO_ENCONTRADA.getTitle())
@@ -189,6 +200,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> trataEntidadeEmUsoException(EntidadeEmUsoException e, WebRequest request) {
 
 		ApiErro erro = ApiErro.builder()
+				.timestamp(LocalDateTime.now())
 				.Status(HttpStatus.CONFLICT.value())
 				.type(ProblemType.ENTIDADE_EM_USO.getUrl())
 				.title(ProblemType.ENTIDADE_EM_USO.getTitle())
@@ -203,12 +215,29 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpStatusCode status, WebRequest request) {
 
 		ApiErro erro = ApiErro.builder()
+				.timestamp(LocalDateTime.now())
 				.Status(status.value())
 				.type(ProblemType.RECURSO_NAO_ENCONTRADO.getUrl())
 				.title(ProblemType.RECURSO_NAO_ENCONTRADO.getTitle())
 				.detail(String.format("O recurso '%s', que você tentou acessar, é inexistente", ex.getRequestURL()))
 				.build();
 
+		return handleExceptionInternal(ex, erro, headers, status, request);
+	}
+
+	@Override
+	protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
+			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+		
+		ApiErro erro = ApiErro.builder()
+				.timestamp(LocalDateTime.now())
+				.Status(status.value())
+				.type(ProblemType.DADO_INVALIDO.getUrl())
+				.title(ProblemType.DADO_INVALIDO.getTitle())
+				.detail("Identificamos que um ou mais campos foram preenchidos incorretamente. Por favor, "
+						+ "revise as informações e preencha os campos corretamente antes de tentar novamente.")
+				.build();
+		
 		return handleExceptionInternal(ex, erro, headers, status, request);
 	}
 
