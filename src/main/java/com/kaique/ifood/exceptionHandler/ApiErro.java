@@ -1,6 +1,8 @@
 package com.kaique.ifood.exceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -17,4 +19,12 @@ public class ApiErro {
 	private String type;
 	private String title;
 	private String detail;
+	private List<Field> fields = new ArrayList<>();
+	
+	@Getter
+	@Builder
+	public static class Field {
+		private String nome;
+		private String userMessage;
+	}
 }

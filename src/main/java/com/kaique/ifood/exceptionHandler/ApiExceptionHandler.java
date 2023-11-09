@@ -1,6 +1,7 @@
 package com.kaique.ifood.exceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -24,6 +26,7 @@ import com.kaique.ifood.exception.ChaveEstrangeiraNaoEncontradaException;
 import com.kaique.ifood.exception.EntidadeEmUsoException;
 import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.exception.NegocioException;
+import com.kaique.ifood.exceptionHandler.ApiErro.Field;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -239,6 +242,30 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				.build();
 		
 		return handleExceptionInternal(ex, erro, headers, status, request);
+	}
+	
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+		
+		  List<Field> appiErroFields = ex.getBindingResult().getFieldErrors().stream()
+		 .map(x -> ApiErro.Field
+				 .builder()
+				 .nome(x.getField())
+				 .userMessage(x.getDefaultMessage())
+				 .build())
+		 .collect(Collectors.toList());
+		  
+		ApiErro erro = ApiErro.builder()
+				.timestamp(LocalDateTime.now())
+				.Status(status.value())
+				.title(ProblemType.DADO_INVALIDO.getTitle())
+				.type(ProblemType.DADO_INVALIDO.getUrl())
+				.detail("Um ou mais campos estão invalido . faça o preenchimento correto e tente novamente")
+				.fields(appiErroFields)
+				.build();
+		
+		return handleExceptionInternal(ex , erro ,new HttpHeaders(), status, request);
 	}
 
 }
