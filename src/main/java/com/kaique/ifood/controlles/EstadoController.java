@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kaique.ifood.entities.Estado;
 import com.kaique.ifood.services.EstadoService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/estados")
 public class EstadoController {
@@ -36,12 +38,12 @@ public class EstadoController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public Estado adiciona(@RequestBody Estado estado) {
+	public Estado adiciona(@Valid @RequestBody Estado estado) {
 		return service.adiciona(estado);
 	}
 
 	@PutMapping("/{estadiId}")
-	public Estado atualiza(@PathVariable Long estadiId, @RequestBody Estado estado) {
+	public Estado atualiza(@PathVariable Long estadiId,@Valid @RequestBody Estado estado) {
 		return service.atualiza(estadiId, estado);
 	}
 

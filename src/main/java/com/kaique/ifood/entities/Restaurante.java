@@ -70,8 +70,8 @@ public class Restaurante implements Serializable {
 	@Embedded
 	private Endereco endereco;
 
-	@Valid
-	@NotNull
+	//@Valid Valida as associações de uma entidade em cascata
+ 	//@NotNull
 	@ManyToOne
 	@JoinColumn(name = "cozinha_id")
 	private Cozinha cozinha;

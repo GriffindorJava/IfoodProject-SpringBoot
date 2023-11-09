@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kaique.ifood.entities.Cozinha;
 import com.kaique.ifood.services.CozinhaService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/cozinhas")
 public class CozinhaController {
@@ -51,12 +53,12 @@ public class CozinhaController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public Cozinha adiciona(@RequestBody Cozinha cozinha) {
+	public Cozinha adiciona(@Valid @RequestBody Cozinha cozinha) {
 		return service.adiciona(cozinha);
 	}
 
 	@PutMapping("/{cozinhaId}")
-	public Cozinha atualiza(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha) {
+	public Cozinha atualiza(@PathVariable Long cozinhaId,@Valid @RequestBody Cozinha cozinha) {
 		return service.atualiza(cozinhaId, cozinha);
 	}
 

@@ -15,6 +15,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -35,8 +37,13 @@ public class Usuario implements Serializable {
 	@EqualsAndHashCode.Include
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@NotBlank
 	private String nome;
+	
+	@Email
 	private String email;
+	
 	private String senha;
 
 	@CreationTimestamp
