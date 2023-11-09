@@ -23,7 +23,10 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -45,9 +48,13 @@ public class Restaurante implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
+	
+	//@NotNull
+	@NotBlank
 	private String nome;
 
+	// @PositiveOrZero o valor que o usuário digitar tem quer igual ou maio que zero 
+	@DecimalMin("0")
 	@JoinColumn(name = "taxa_frete")
 	private BigDecimal taxaFrete;
 
