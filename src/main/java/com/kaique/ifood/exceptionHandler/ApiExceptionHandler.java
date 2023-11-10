@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -31,6 +34,9 @@ import com.kaique.ifood.exceptionHandler.ApiErro.Field;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
+	@Autowired
+	private MessageSource messageSource;
+	
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
 			HttpStatusCode statusCode, WebRequest request) {
@@ -248,12 +254,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		
+		
+		
 		  List<Field> appiErroFields = ex.getBindingResult().getFieldErrors().stream()
-		 .map(x -> ApiErro.Field
+		 .map(x -> {
+			   String messagem = messageSource.getMessage(x , LocaleContextHolder.getLocale());
+			 
+			 return ApiErro.Field
 				 .builder()
 				 .nome(x.getField())
-				 .userMessage(x.getDefaultMessage())
-				 .build())
+				 .userMessage(messagem)
+				 .build(); 
+				 })
 		 .collect(Collectors.toList());
 		  
 		ApiErro erro = ApiErro.builder()

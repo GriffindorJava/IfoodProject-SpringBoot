@@ -32,7 +32,6 @@ public class Cidade implements Serializable{
 	private Long id;
 	
 	@NotBlank
-	@NotNull
 	private String nome;
 	
 
