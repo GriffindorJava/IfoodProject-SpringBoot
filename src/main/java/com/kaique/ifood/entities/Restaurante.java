@@ -53,7 +53,7 @@ public class Restaurante implements Serializable {
 	private String nome;
 
 	// @PositiveOrZero o valor que o usuário digitar tem quer igual ou maio que zero 
-	@TaxaFrete
+	@TaxaFrete // A anotação @TaxaFrete foi criada com propósitos didáticos e tem o mesmo efeito prático que a anotação @PositiveOrZero. 
 	@DecimalMin("0")
 	@JoinColumn(name = "taxa_frete")
 	private BigDecimal taxaFrete;
