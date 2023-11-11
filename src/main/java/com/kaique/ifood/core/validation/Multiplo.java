@@ -18,14 +18,20 @@ import jakarta.validation.Payload;
 @Retention(RUNTIME)
 @Constraint(validatedBy = { MultiploValidator.class })
 public @interface Multiplo {
-	
-//	Uma anotação do Bean validation precisa ter essas 3 propriedades
+
+	/*
+	 * A anotação @Multiplo foi criada unicamente para fins didáticos e não está atualmente em uso no código. 
+	 * Sua criação teve como objetivo proporcionar uma compreensão conceitual e ilustrativa, mas, na prática,
+	 * não está sendo empregada no sistema."
+	 */
+
+	// Uma anotação do Bean validation precisa ter essas 3 propriedades
 	String message() default "Múltiplo inválido";
 
-	Class<?>[] groups() default { };
+	Class<?>[] groups() default {};
 
-	Class<? extends Payload>[] payload() default { };
-	
+	Class<? extends Payload>[] payload() default {};
+
 	// Propriedades personalizadas
 	int numero();
 
