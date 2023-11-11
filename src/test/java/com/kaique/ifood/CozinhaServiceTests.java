@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.kaique.ifood.entities.Cozinha;
+import com.kaique.ifood.exception.EntidadeEmUsoException;
+import com.kaique.ifood.exception.EntidadeNaoEncontradaException;
 import com.kaique.ifood.services.CozinhaService;
 
 import jakarta.validation.ConstraintViolationException;
@@ -41,9 +43,24 @@ class CozinhaServiceTests {
 		Cozinha novaCozinha = new Cozinha();
 		novaCozinha.setNome(null);
 
-		assertThrows(ConstraintViolationException.class,() ->  {
+		assertThrows(ConstraintViolationException.class, () -> {
 			cozinhaService.adiciona(novaCozinha);
 		});
-		
+	}
+
+	@Test
+	@DisplayName("deve falhar quando tentar deletar uma cozinha que o id esteja em uso")
+	public void DeveFalhaQuandoExcluiCozinhaEmUso() {
+		assertThrows(EntidadeEmUsoException.class, () -> {
+			cozinhaService.deletar(1L);
+		});
+	}
+
+	@Test
+	@DisplayName("Deve falha se caso o id não for encontrado")
+	public void DeveFalharSeIdNaoForEncontrado() {
+		assertThrows(EntidadeNaoEncontradaException.class, () -> {
+			cozinhaService.deletar(100L);
+		});
 	}
 }
