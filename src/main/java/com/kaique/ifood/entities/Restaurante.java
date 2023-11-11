@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kaique.ifood.core.validation.TaxaFrete;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -52,6 +53,7 @@ public class Restaurante implements Serializable {
 	private String nome;
 
 	// @PositiveOrZero o valor que o usuário digitar tem quer igual ou maio que zero 
+	@TaxaFrete
 	@DecimalMin("0")
 	@JoinColumn(name = "taxa_frete")
 	private BigDecimal taxaFrete;
