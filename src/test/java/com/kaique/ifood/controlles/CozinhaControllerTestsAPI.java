@@ -36,4 +36,17 @@ public class CozinhaControllerTestsAPI {
 		.then()
 			.statusCode(HttpStatus.OK.value());
 	}
+	
+	@Test
+	@DisplayName("testa se retorna 201 quando cria um novo OBJ")
+	public void testeRetornaStatus201QaundoCadastraCozinha() {
+		RestAssured.given()
+		    .body(" { \"nome\" : \" chinesa\" }")
+			.contentType(ContentType.JSON)
+			.accept(ContentType.JSON)
+		.when()
+			.post()
+		.then()
+			.statusCode(HttpStatus.CREATED.value());
+	}
 }
