@@ -49,4 +49,16 @@ public class CozinhaControllerTestsAPI {
 		.then()
 			.statusCode(HttpStatus.CREATED.value());
 	}
+	
+	@Test
+	@DisplayName("testa se retorna 200 quando buscar cozinha por id")
+	public void testeRetornaStatus200QaundoBuscarCozinhaPorId() {
+		RestAssured.given()
+		    .pathParam("id", 2)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{id}")
+		.then()
+			.statusCode(HttpStatus.OK.value());
+	}
 }
