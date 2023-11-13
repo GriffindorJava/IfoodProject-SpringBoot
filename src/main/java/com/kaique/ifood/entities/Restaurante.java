@@ -59,11 +59,9 @@ public class Restaurante implements Serializable {
 	@JoinColumn(name = "taxa_frete")
 	private BigDecimal taxaFrete;
 
-	@JsonIgnore
 	@CreationTimestamp
 	private LocalDateTime dataCadastro;
 
-	@JsonIgnore
 	@UpdateTimestamp
 	private LocalDateTime dataAtualizacao;
 
@@ -72,7 +70,6 @@ public class Restaurante implements Serializable {
 
 	//@Valid Valida as associações de uma entidade em cascata
  	//@NotNull
-	@JsonIgnoreProperties(value = "nome" ,allowGetters = true)
 	@ManyToOne
 	@JoinColumn(name = "cozinha_id")
 	private Cozinha cozinha;
@@ -80,7 +77,6 @@ public class Restaurante implements Serializable {
 	@OneToMany(mappedBy = "restaurante", fetch = FetchType.EAGER)
 	private List<Produto> produtos = new ArrayList<>();
 
-	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "tb_Restaurante_forma_pagamento", joinColumns = @JoinColumn(name = "restaurante_id"), inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
 	private List<FormaPagamento> formaPagamentos = new ArrayList<>();
