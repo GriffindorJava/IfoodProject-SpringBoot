@@ -61,4 +61,16 @@ public class CozinhaControllerTestsAPI {
 		.then()
 			.statusCode(HttpStatus.OK.value());
 	}
+	
+	@Test
+	@DisplayName("testa se retorna 404 quando buscar cozinha por id inexistente ")
+	public void testeRetornaStatus404QaundoBuscarCozinhaPorIdInexistente () {
+		RestAssured.given()
+		    .pathParam("id", 100)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{id}")
+		.then()
+			.statusCode(HttpStatus.NOT_FOUND.value());
+	}
 }
