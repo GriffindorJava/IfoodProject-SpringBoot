@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kaique.ifood.core.validation.TaxaFrete;
 
 import jakarta.persistence.Embedded;
@@ -71,6 +72,7 @@ public class Restaurante implements Serializable {
 
 	//@Valid Valida as associações de uma entidade em cascata
  	//@NotNull
+	@JsonIgnoreProperties(value = "nome" ,allowGetters = true)
 	@ManyToOne
 	@JoinColumn(name = "cozinha_id")
 	private Cozinha cozinha;
