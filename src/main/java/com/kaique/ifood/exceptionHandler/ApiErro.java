@@ -1,6 +1,6 @@
 package com.kaique.ifood.exceptionHandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +14,7 @@ import lombok.Getter;
 @Builder
 public class ApiErro {
 	
-	private LocalDateTime timestamp;
+	private OffsetDateTime timestamp;
 	private Integer Status;
 	private String type;
 	private String title;

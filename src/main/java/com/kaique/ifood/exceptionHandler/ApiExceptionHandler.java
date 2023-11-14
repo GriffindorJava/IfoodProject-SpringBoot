@@ -1,6 +1,6 @@
 package com.kaique.ifood.exceptionHandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,7 +72,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		}
 
 		ApiErro erro = ApiErro.builder()
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.Status(status.value())
 				.type(ProblemType.CORPO_ILEGIVEL.getUrl())
 				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
@@ -88,7 +88,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String path = ex.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
 
 		ApiErro erro = ApiErro.builder()
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.Status(status.value())
 				.type(ProblemType.CORPO_ILEGIVEL.getUrl())
 				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
@@ -103,7 +103,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String path = ex.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
 
 		ApiErro erro = ApiErro.builder()
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.Status(status.value()).type(ProblemType.CORPO_ILEGIVEL.getUrl())
 				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
 				.detail(String.format("O campo '%s' está sendo ignorado e não deve ser enviado na requisição.", path))
@@ -118,7 +118,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String path = ex.getPath().stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
 
 		ApiErro erro = ApiErro.builder()
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.Status(status.value())
 				.type(ProblemType.CORPO_ILEGIVEL.getUrl())
 				.title(ProblemType.CORPO_ILEGIVEL.getTitle())
@@ -134,7 +134,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> trataException(Exception ex , WebRequest request) {
 		
 		ApiErro erro =  ApiErro.builder()
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.Status(HttpStatus.INTERNAL_SERVER_ERROR.value())
 				.type(ProblemType.ERRO_DE_SISTEMA.getUrl())
 				.title(ProblemType.ERRO_DE_SISTEMA.getTitle())
@@ -150,7 +150,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			WebRequest request) {
 
 		ApiErro erro = ApiErro.builder()
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.Status(HttpStatus.NOT_FOUND.value())
 				.type(ProblemType.PARAMETRO_INVALIDO.getUrl())
 				.title(ProblemType.PARAMETRO_INVALIDO.getTitle())
@@ -166,7 +166,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> trataNegocioException(NegocioException e, WebRequest request) {
 
 		ApiErro erro = ApiErro.builder()
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.Status(HttpStatus.CONFLICT.value())
 				.type(ProblemType.NEGOCIO.getUrl())
 				.title(ProblemType.NEGOCIO.getTitle())
@@ -181,7 +181,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			WebRequest request) {
 
 		ApiErro erro = ApiErro.builder()
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.Status(HttpStatus.BAD_REQUEST.value())
 				.type(ProblemType.CHAVE_ESTRANGEIRA_NAO_ENCONTRA.getUrl())
 				.title(ProblemType.CHAVE_ESTRANGEIRA_NAO_ENCONTRA.getTitle())
@@ -195,7 +195,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> trataEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e, WebRequest request) {
 
 		ApiErro erro = ApiErro.builder()
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.Status(HttpStatus.NOT_FOUND.value())
 				.type(ProblemType.ENTIDADE_NAO_ENCONTRADA.getUrl())
 				.title(ProblemType.ENTIDADE_NAO_ENCONTRADA.getTitle())
@@ -209,7 +209,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> trataEntidadeEmUsoException(EntidadeEmUsoException e, WebRequest request) {
 
 		ApiErro erro = ApiErro.builder()
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.Status(HttpStatus.CONFLICT.value())
 				.type(ProblemType.ENTIDADE_EM_USO.getUrl())
 				.title(ProblemType.ENTIDADE_EM_USO.getTitle())
@@ -224,7 +224,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpStatusCode status, WebRequest request) {
 
 		ApiErro erro = ApiErro.builder()
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.Status(status.value())
 				.type(ProblemType.RECURSO_NAO_ENCONTRADO.getUrl())
 				.title(ProblemType.RECURSO_NAO_ENCONTRADO.getTitle())
@@ -239,7 +239,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		
 		ApiErro erro = ApiErro.builder()
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.Status(status.value())
 				.type(ProblemType.DADO_INVALIDO.getUrl())
 				.title(ProblemType.DADO_INVALIDO.getTitle())
@@ -269,7 +269,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		 .collect(Collectors.toList());
 		  
 		ApiErro erro = ApiErro.builder()
-				.timestamp(LocalDateTime.now())
+				.timestamp(OffsetDateTime.now())
 				.Status(status.value())
 				.title(ProblemType.DADO_INVALIDO.getTitle())
 				.type(ProblemType.DADO_INVALIDO.getUrl())
