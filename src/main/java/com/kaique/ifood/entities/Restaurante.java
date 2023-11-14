@@ -2,17 +2,17 @@ package com.kaique.ifood.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kaique.ifood.core.validation.TaxaFrete;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -48,7 +48,6 @@ public class Restaurante implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	
 	//@NotNull
 	@NotBlank
 	private String nome;
@@ -60,10 +59,12 @@ public class Restaurante implements Serializable {
 	private BigDecimal taxaFrete;
 
 	@CreationTimestamp
-	private LocalDateTime dataCadastro;
+	@Column(columnDefinition = "datetime")
+	private OffsetDateTime dataCadastro;
 
 	@UpdateTimestamp
-	private LocalDateTime dataAtualizacao;
+	@Column(columnDefinition = "datetime")
+	private OffsetDateTime dataAtualizacao;
 
 	@Embedded
 	private Endereco endereco;

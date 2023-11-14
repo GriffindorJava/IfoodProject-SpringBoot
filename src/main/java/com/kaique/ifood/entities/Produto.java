@@ -3,9 +3,6 @@ package com.kaique.ifood.entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,13 +33,17 @@ public class Produto implements Serializable {
 	@EqualsAndHashCode.Include
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@NotBlank
 	private String nome;
 	private String descricao;
+
+	@NotNull
 	private BigDecimal preco;
+
+	@NotNull
 	private Boolean ativo;
 
-	@JsonIgnore
-	@JsonIgnoreProperties("hibernateLazyInitializer")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "restaurantes_id")
 	private Restaurante restaurante;

@@ -17,6 +17,8 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -44,6 +46,8 @@ public class Usuario implements Serializable {
 	@Email
 	private String email;
 	
+	@NotNull
+	@Size(min = 6 , max = 15)
 	private String senha;
 
 	@CreationTimestamp
